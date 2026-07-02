@@ -1,0 +1,157 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=Share+Tech+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+@import "tailwindcss";
+
+/* ── Design Tokens (Light Theme) ───────────────────────────────────────────── */
+:root {
+  --md-sys-color-primary: #1e293b;
+  --md-sys-color-on-primary: #ffffff;
+  --md-sys-color-primary-container: #f1f5f9;
+  --md-sys-color-on-primary-container: #0f172a;
+  --md-sys-color-surface: #ffffff;
+  --md-sys-color-on-surface: #0f172a;
+  --md-sys-color-surface-container: #f8fafc;
+  --md-sys-color-surface-container-high: #e2e8f0;
+  --md-sys-color-outline: #94a3b8;
+  --md-sys-color-outline-variant: #cbd5e1;
+  --md-sys-typescale-brand-font: 'Roboto', sans-serif;
+  --md-sys-typescale-plain-font: 'Roboto', sans-serif;
+}
+
+@theme {
+  --font-sans: 'Inter', sans-serif;
+  --font-outfit: 'Outfit', sans-serif;
+  --font-mono: 'Share Tech Mono', monospace;
+  --font-roboto: 'Roboto', sans-serif;
+}
+
+/* ── Base ──────────────────────────────────────────────────────────────────── */
+body {
+  background-color: #f8fafc;
+  color: #0f172a;
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+}
+
+/* ── Custom Scrollbar ──────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #f1f5f9; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+/* ── Bingo Ball Animation ──────────────────────────────────────────────────── */
+@keyframes bingoBallSpin {
+  0%   { transform: scale(0.8) rotate(-20deg); opacity: 0.5; }
+  40%  { transform: scale(1.2) rotate(10deg);  opacity: 1;   }
+  70%  { transform: scale(0.95) rotate(-5deg); opacity: 1;   }
+  100% { transform: scale(1) rotate(0deg);     opacity: 1;   }
+}
+
+.bingo-ball-spin {
+  animation: bingoBallSpin 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ── Fade In ───────────────────────────────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+.fade-in {
+  animation: fadeIn 0.25s ease-out forwards;
+}
+
+/* ── Pop animation (for called number badges) ──────────────────────────────── */
+@keyframes pop {
+  0%   { transform: scale(0.6); opacity: 0; }
+  70%  { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.pop {
+  animation: pop 0.3s ease-out forwards;
+}
+
+/* ── Web Preview Card ──────────────────────────────────────────────────────── */
+.preview-card {
+  width: 135mm;
+  min-height: 185mm;
+  background: white;
+  color: black;
+  box-shadow:
+    0 10px 25px -5px rgba(0, 0, 0, 0.25),
+    0 8px 10px -6px rgba(0, 0, 0, 0.2);
+  border: 1px solid #e2e8f0;
+  box-sizing: border-box;
+}
+
+/* ── Print Stylesheet ──────────────────────────────────────────────────────── */
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 0;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-container {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .print-page {
+    page-break-after: always;
+    break-inside: avoid;
+    display: flex !important;
+    flex-direction: row !important;
+    width: 297mm;
+    height: 210mm;
+    padding: 8mm 12mm !important;
+    box-sizing: border-box !important;
+    background: white !important;
+    gap: 0 !important;
+  }
+
+  /* Last page — no forced page break */
+  .print-page:last-child {
+    page-break-after: auto;
+  }
+
+  .print-card-wrapper {
+    width: 50% !important;
+    box-sizing: border-box !important;
+    padding: 0 8mm !important;
+    display: flex !important;
+    align-items: stretch !important;
+  }
+
+  /* Dashed cut line between cards */
+  .print-card-wrapper:first-child {
+    border-right: 1.5px dashed #aaa !important;
+  }
+
+  /* Override web card sizing for print */
+  .print-card-wrapper .preview-card {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: unset !important;
+    box-shadow: none !important;
+    border: 2px solid black !important;
+    box-sizing: border-box !important;
+  }
+}

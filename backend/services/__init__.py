@@ -1,0 +1,1 @@
+# Bingo services package marker

@@ -1,0 +1,23 @@
+import React from 'react';
+
+export default function Pagination({ page, totalPages, onPrev, onNext }) {
+  return (
+    <div className="flex items-center justify-between px-3 py-2 border-t border-slate-200">
+      <button
+        onClick={onPrev}
+        disabled={page === 0}
+        className="text-[10px] px-2 py-1 rounded bg-slate-100 text-slate-600 disabled:opacity-40 hover:bg-slate-200 transition"
+      >
+        ← Ant
+      </button>
+      <span className="text-[10px] text-slate-500">{page + 1} / {totalPages}</span>
+      <button
+        onClick={onNext}
+        disabled={page >= totalPages - 1}
+        className="text-[10px] px-2 py-1 rounded bg-slate-100 text-slate-600 disabled:opacity-40 hover:bg-slate-200 transition"
+      >
+        Prox →
+      </button>
+    </div>
+  );
+}
