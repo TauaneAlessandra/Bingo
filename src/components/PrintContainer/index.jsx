@@ -9,6 +9,8 @@ function PrintContainer({
   logoData,
   centerLogoData,
   sponsorsLogos,
+  realizadoPorLogo,
+  qrCodeLogo,
   printReady = false,
   onProgress,
   onReady,
@@ -75,6 +77,8 @@ function PrintContainer({
           logoData={logoData}
           centerLogoData={centerLogoData}
           sponsorsLogos={sponsorsLogos}
+          realizadoPorLogo={realizadoPorLogo}
+          qrCodeLogo={qrCodeLogo}
         />
       ))}
     </div>

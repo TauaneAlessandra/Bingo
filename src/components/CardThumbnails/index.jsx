@@ -1,4 +1,4 @@
-import React, { useState, memo } from 'react';
+import React, { useState, useEffect, useRef, memo } from 'react';
 import { generateBingoNumbers } from '../../utils/bingo';
 import MiniGrid from './MiniGrid';
 import Pagination from './Pagination';
@@ -6,7 +6,25 @@ import Pagination from './Pagination';
 const CardThumbnails = memo(function CardThumbnails({ startNum, quantity, numberRange = 75, currentIndex, onSelect, backendCards }) {
   const PAGE_SIZE = 20;
   const [page, setPage] = useState(0);
-  const totalPages = Math.ceil(quantity / PAGE_SIZE);
+  const totalPages = Math.ceil(quantity / PAGE_SIZE) || 1;
+
+  // Sync page when currentIndex or totalPages changes
+  useEffect(() => {
+    const targetPage = Math.floor(currentIndex / PAGE_SIZE);
+    if (targetPage !== page && targetPage < totalPages && targetPage >= 0) {
+      setPage(targetPage);
+    }
+  }, [currentIndex, totalPages]);
+
+  const activeRef = useRef(null);
+
+  // Scroll active thumbnail into view when currentIndex changes
+  useEffect(() => {
+    if (activeRef.current) {
+      activeRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }, [currentIndex]);
+
   const pageStart = page * PAGE_SIZE;
   const pageEnd = Math.min(pageStart + PAGE_SIZE, quantity);
 
@@ -44,6 +62,7 @@ const CardThumbnails = memo(function CardThumbnails({ startNum, quantity, number
           return (
             <button
               key={num}
+              ref={isActive ? activeRef : null}
               onClick={() => onSelect(globalIdx)}
               className={`flex flex-col items-center gap-1 p-1.5 rounded-lg border-2 transition-all cursor-pointer hover:scale-105 ${
                 isActive

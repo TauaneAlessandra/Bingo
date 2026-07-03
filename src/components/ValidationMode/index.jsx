@@ -1,6 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { generateBingoNumbers } from '../../utils/bingo';
-import { checkBackendStatus, getBackendCardByNumber } from '../../utils/api';
 import ValidationHeader from './ValidationHeader';
 import ValidationInputs from './ValidationInputs';
 import ValidationResults from './ValidationResults';
@@ -27,44 +26,10 @@ export default function ValidationMode({ onClose, numberRange = 75, accentColor 
     );
   }, [drawnInput, numberRange]);
 
-  // Load card from backend if online, fallback to offline local generation
+  // Load card from backend is disabled
   useEffect(() => {
-    if (!isValidCard || !submitted) {
-      setBackendGrids(null);
-      setErrorMsg('');
-      return;
-    }
-
-    let active = true;
-    async function loadCard() {
-      setLoadingBackend(true);
-      setErrorMsg('');
-      try {
-        const data = await getBackendCardByNumber(cardNum);
-        if (active) {
-          setBackendGrids(data.grids);
-        }
-      } catch (err) {
-        if (active) {
-          setErrorMsg(err.message || 'Cartela não cadastrada no banco.');
-          setBackendGrids(null);
-        }
-      } finally {
-        if (active) {
-          setLoadingBackend(false);
-        }
-      }
-    }
-
-    checkBackendStatus().then(status => {
-      if (status.online) {
-        loadCard();
-      } else {
-        setBackendGrids(null);
-      }
-    });
-
-    return () => { active = false; };
+    setBackendGrids(null);
+    setErrorMsg('');
   }, [cardNum, isValidCard, submitted]);
 
   const grids = useMemo(() => {

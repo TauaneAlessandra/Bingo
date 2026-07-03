@@ -6,62 +6,41 @@ import PrintContainer from './components/PrintContainer';
 import DrawMode from './components/DrawMode';
 import ValidationMode from './components/ValidationMode';
 import PrintModal from './components/PrintModal';
-import { checkBackendStatus, getBackendConfig, saveBackendConfig, getBackendCards } from './utils/api';
-import { useDebouncedCallback } from './utils/useDebounce';
-
-// ─── LocalStorage helpers ───────────────────────────────────────────────────
-const STORAGE_KEY = 'bringo-config-v2';
-
-function loadConfig() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-}
-
-function saveConfigToStorage(data) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  } catch {
-    // quota exceeded — silent fail
-  }
-}
-
-// ─── Default Config ──────────────────────────────────────────────────────────
-const DEFAULT_CONFIG = {
-  title: '',
-  subtitle: '',
-  attractions: '',
-  rules: '',
-  exclusiveDate: '',
-  prizes: ['', '', '', ''],
-  numberRange: 75,
-  accentColor: '#ffffff',
-  centerSpaceType: 'star',
-  sponsorsTitle: '',
-  multiColor: true,
-};
+import { useBingoConfig, DEFAULT_CONFIG } from './hooks/useBingoConfig';
+import { useImageUploads } from './hooks/useImageUploads';
 
 function App() {
-  const [config, setConfig] = useState(() => {
-    const loaded = loadConfig() || {};
-    if (loaded.accentColor === '#f59e0b') {
-      loaded.accentColor = '#ffffff';
-    }
-    return {
-      ...DEFAULT_CONFIG,
-      ...loaded,
-    };
-  });
+  const {
+    config,
+    updateConfig,
+    addPrize,
+    removePrize,
+    updatePrize,
+    resetAll,
+  } = useBingoConfig();
+
+  const {
+    logoData,
+    sponsorsLogos,
+    realizadoPorLogo,
+    qrCodeLogo,
+    centerLogoData,
+    handleImageUpload,
+    resetLogo,
+    handleSponsorsImageUpload,
+    removeSponsorsLogo,
+    handleCenterImageUpload,
+    resetCenterLogo,
+    handleRealizadoPorImageUpload,
+    resetRealizadoPorLogo,
+    handleQrCodeImageUpload,
+    resetQrCodeLogo,
+  } = useImageUploads();
 
   const [startNum, setStartNum] = useState(1);
   const [quantity, setQuantity] = useState(10);
-  const [logoData, setLogoData] = useState(null);
-  const [sponsorsLogos, setSponsorsLogos] = useState([]);
-  const [centerLogoData, setCenterLogoData] = useState(null);
   const [previewIndex, setPreviewIndex] = useState(0);
+  const [zoom, setZoom] = useState(100);
 
   // Modal states
   const [showDrawMode, setShowDrawMode] = useState(false);
@@ -69,71 +48,18 @@ function App() {
   const [showPrintModal, setShowPrintModal] = useState(false);
   const [showThumbnails, setShowThumbnails] = useState(false);
 
-  // Backend states
-  const [backendOnline, setBackendOnline] = useState(false);
-  const [backendCards, setBackendCards] = useState([]);
-  const [loadingCards, setLoadingCards] = useState(false);
+  // Backend states (disabled)
+  const backendOnline = false;
+  const backendCards = [];
+  const loadingCards = false;
 
   // Print states — lazy rendering
   const [printReady, setPrintReady] = useState(false);
   const [printProgress, setPrintProgress] = useState(0);
-  const printReadyResolveRef = useRef(null);
 
   const refreshBackendCards = useCallback(async (currentStart = startNum, currentQty = quantity) => {
-    setLoadingCards(true);
-    try {
-      const status = await checkBackendStatus();
-      setBackendOnline(status.online);
-      if (status.online) {
-        const res = await getBackendCards({ start: currentStart, quantity: currentQty, limit: currentQty });
-        setBackendCards(res.cards || []);
-      } else {
-        setBackendCards([]);
-      }
-    } catch (err) {
-      console.error('Error fetching backend cards:', err);
-      setBackendCards([]);
-    } finally {
-      setLoadingCards(false);
-    }
-  }, [startNum, quantity]);
-
-  // ── Sync with backend config on mount ──
-  useEffect(() => {
-    async function syncConfig() {
-      try {
-        const status = await checkBackendStatus();
-        setBackendOnline(status.online);
-        if (status.online) {
-          const dbConfig = await getBackendConfig();
-          if (dbConfig) {
-            setConfig(prev => ({ ...prev, ...dbConfig }));
-          }
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    }
-    syncConfig();
+    // No-op since backend is disabled
   }, []);
-
-  // ── Debounced save to localStorage (300ms) ──
-  const debouncedSaveStorage = useDebouncedCallback((cfg) => {
-    saveConfigToStorage(cfg);
-  }, 300);
-
-  // ── Debounced save to backend (500ms) ──
-  const debouncedSaveBackend = useDebouncedCallback((cfg) => {
-    saveBackendConfig(cfg);
-  }, 500);
-
-  // ── Save config when config changes (debounced) ──
-  useEffect(() => {
-    debouncedSaveStorage(config);
-    if (backendOnline) {
-      debouncedSaveBackend(config);
-    }
-  }, [config, backendOnline, debouncedSaveStorage, debouncedSaveBackend]);
 
   // ── Reset previewIndex when quantity changes ──
   useEffect(() => {
@@ -144,74 +70,6 @@ function App() {
   useEffect(() => {
     refreshBackendCards(startNum, quantity);
   }, [startNum, quantity, refreshBackendCards]);
-
-  // ── Config helpers ──
-  const updateConfig = useCallback((patch) => setConfig(prev => ({ ...prev, ...patch })), []);
-
-  // ── Prizes array management ──
-  const addPrize = useCallback(() => {
-    setConfig(prev => {
-      if (prev.prizes.length >= 6) return prev;
-      return { ...prev, prizes: [...prev.prizes, ''] };
-    });
-  }, []);
-
-  const removePrize = useCallback((idx) => {
-    setConfig(prev => {
-      if (prev.prizes.length <= 1) return prev;
-      return { ...prev, prizes: prev.prizes.filter((_, i) => i !== idx) };
-    });
-  }, []);
-
-  const updatePrize = useCallback((idx, val) => {
-    setConfig(prev => {
-      const next = [...prev.prizes];
-      next[idx] = val.toUpperCase();
-      return { ...prev, prizes: next };
-    });
-  }, []);
-
-  // ── Image Upload ──
-  const handleImageUpload = useCallback((e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onloadend = () => setLogoData(reader.result);
-    reader.readAsDataURL(file);
-  }, []);
-
-  const resetLogo = useCallback(() => setLogoData(null), []);
-
-  const handleSponsorsImageUpload = useCallback((e) => {
-    const files = Array.from(e.target.files);
-    if (!files || files.length === 0) return;
-    files.forEach(file => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setSponsorsLogos(prev => [...prev, reader.result]);
-      };
-      reader.readAsDataURL(file);
-    });
-  }, []);
-
-  const removeSponsorsLogo = useCallback((idx) => {
-    setSponsorsLogos(prev => prev.filter((_, i) => i !== idx));
-  }, []);
-
-  const handleCenterImageUpload = useCallback((e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onloadend = () => setCenterLogoData(reader.result);
-    reader.readAsDataURL(file);
-  }, []);
-
-  const resetCenterLogo = useCallback(() => setCenterLogoData(null), []);
-
-  const resetAll = useCallback(() => {
-    setConfig(DEFAULT_CONFIG);
-    localStorage.removeItem(STORAGE_KEY);
-  }, []);
 
   // ── Card Numbers / Objects Pairing (MEMOIZED) ──
   const useBackendData = backendOnline && backendCards.length === quantity;
@@ -287,6 +145,12 @@ function App() {
           sponsorsLogos={sponsorsLogos}
           handleSponsorsImageUpload={handleSponsorsImageUpload}
           removeSponsorsLogo={removeSponsorsLogo}
+          realizadoPorLogo={realizadoPorLogo}
+          handleRealizadoPorImageUpload={handleRealizadoPorImageUpload}
+          resetRealizadoPorLogo={resetRealizadoPorLogo}
+          qrCodeLogo={qrCodeLogo}
+          handleQrCodeImageUpload={handleQrCodeImageUpload}
+          resetQrCodeLogo={resetQrCodeLogo}
           addPrize={addPrize}
           removePrize={removePrize}
           updatePrize={updatePrize}
@@ -304,10 +168,14 @@ function App() {
           logoData={logoData}
           centerLogoData={centerLogoData}
           sponsorsLogos={sponsorsLogos}
+          realizadoPorLogo={realizadoPorLogo}
+          qrCodeLogo={qrCodeLogo}
           showThumbnails={showThumbnails}
           backendCards={useBackendData ? backendCards : null}
           backendOnline={backendOnline}
           loadingCards={loadingCards}
+          zoom={zoom}
+          setZoom={setZoom}
         />
       </div>
 
@@ -318,6 +186,8 @@ function App() {
         logoData={logoData}
         centerLogoData={centerLogoData}
         sponsorsLogos={sponsorsLogos}
+        realizadoPorLogo={realizadoPorLogo}
+        qrCodeLogo={qrCodeLogo}
         printReady={printReady}
         onProgress={setPrintProgress}
         onReady={handlePrintReady}

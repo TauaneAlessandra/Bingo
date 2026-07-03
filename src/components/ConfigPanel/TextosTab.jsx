@@ -1,97 +1,126 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useDebouncedCallback } from '../../utils/useDebounce';
+import React from 'react';
+import TitleStyleEditor from './TitleStyleEditor';
+import TextFieldWithStyle from './TextFieldWithStyle';
+
+const FIELDS = [
+  { fieldKey: 'subtitle', label: 'Horário e Datas', inputLabel: 'Horário e Datas' },
+  { fieldKey: 'attractions', label: 'Atrações', inputLabel: 'Atrações (separadas por |)' },
+  { fieldKey: 'confira', label: 'Confira', inputLabel: 'Confira no... (ex: Instagram @seu-insta)' },
+  { fieldKey: 'rules', label: 'Regras', inputLabel: 'Informações Gerais / Regras' },
+  { fieldKey: 'exclusiveDate', label: 'Aviso Vermelho', inputLabel: 'Aviso Vermelho (data exclusiva etc.)', uppercase: true },
+  { fieldKey: 'cardValue', label: 'Valor da Cartela', inputLabel: 'Valor da Cartela (ex: R$ 10,00)' },
+];
 
 function TextosTab({ config, updateConfig, DEFAULT_CONFIG }) {
-  // Local state for responsive typing — syncs to parent via debounce
-  const [localTitle, setLocalTitle] = useState(config.title);
-  const [localSubtitle, setLocalSubtitle] = useState(config.subtitle);
-  const [localAttractions, setLocalAttractions] = useState(config.attractions);
-  const [localRules, setLocalRules] = useState(config.rules);
-  const [localExclusiveDate, setLocalExclusiveDate] = useState(config.exclusiveDate);
-
-  // Sync from parent config when it changes externally (e.g. reset, backend sync)
-  useEffect(() => { setLocalTitle(config.title); }, [config.title]);
-  useEffect(() => { setLocalSubtitle(config.subtitle); }, [config.subtitle]);
-  useEffect(() => { setLocalAttractions(config.attractions); }, [config.attractions]);
-  useEffect(() => { setLocalRules(config.rules); }, [config.rules]);
-  useEffect(() => { setLocalExclusiveDate(config.exclusiveDate); }, [config.exclusiveDate]);
-
-  // Debounced updaters (300ms delay)
-  const debouncedUpdateTitle = useDebouncedCallback((v) => updateConfig({ title: v }), 300);
-  const debouncedUpdateSubtitle = useDebouncedCallback((v) => updateConfig({ subtitle: v }), 300);
-  const debouncedUpdateAttractions = useDebouncedCallback((v) => updateConfig({ attractions: v }), 300);
-  const debouncedUpdateRules = useDebouncedCallback((v) => updateConfig({ rules: v }), 300);
-  const debouncedUpdateExclDate = useDebouncedCallback((v) => updateConfig({ exclusiveDate: v }), 300);
-
   return (
     <div className="space-y-4 flex flex-col">
       <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Textos do Cabeçalho</h3>
 
-      <md-outlined-text-field
-        label="Título do Evento"
-        value={localTitle}
-        onInput={(e) => {
-          const v = e.target.value.toUpperCase();
-          setLocalTitle(v);
-          debouncedUpdateTitle(v);
-        }}
-      />
-      <md-outlined-text-field
-        label="Horário e Datas"
-        value={localSubtitle}
-        onInput={(e) => {
-          setLocalSubtitle(e.target.value);
-          debouncedUpdateSubtitle(e.target.value);
-        }}
-      />
-      <md-outlined-text-field
-        label="Atrações (separadas por |)"
-        value={localAttractions}
-        onInput={(e) => {
-          setLocalAttractions(e.target.value);
-          debouncedUpdateAttractions(e.target.value);
-        }}
-      />
-      <md-outlined-text-field
-        label="Informações Gerais / Regras"
-        value={localRules}
-        onInput={(e) => {
-          setLocalRules(e.target.value);
-          debouncedUpdateRules(e.target.value);
-        }}
-      />
-      <md-outlined-text-field
-        label="Aviso Vermelho (data exclusiva etc.)"
-        value={localExclusiveDate}
-        onInput={(e) => {
-          const v = e.target.value.toUpperCase();
-          setLocalExclusiveDate(v);
-          debouncedUpdateExclDate(v);
-        }}
-      />
+      <div className="flex flex-col">
+        <md-outlined-text-field
+          label="Título do Evento"
+          value={config.title}
+          onInput={(e) => updateConfig({ title: e.target.value.toUpperCase() })}
+        />
+        {/* Customizador de Estilo do Título */}
+        <TitleStyleEditor config={config} updateConfig={updateConfig} />
+      </div>
 
-      <button
-        onClick={() => {
-          updateConfig({
-            title: DEFAULT_CONFIG.title,
-            subtitle: DEFAULT_CONFIG.subtitle,
-            attractions: DEFAULT_CONFIG.attractions,
-            rules: DEFAULT_CONFIG.rules,
-            exclusiveDate: DEFAULT_CONFIG.exclusiveDate,
-          });
-          setLocalTitle(DEFAULT_CONFIG.title);
-          setLocalSubtitle(DEFAULT_CONFIG.subtitle);
-          setLocalAttractions(DEFAULT_CONFIG.attractions);
-          setLocalRules(DEFAULT_CONFIG.rules);
-          setLocalExclusiveDate(DEFAULT_CONFIG.exclusiveDate);
-        }}
-        className="self-start text-xs text-slate-500 hover:text-slate-300 transition underline underline-offset-2"
-      >
-        Restaurar padrão
-      </button>
+      {FIELDS.map((field) => (
+        <TextFieldWithStyle
+          key={field.fieldKey}
+          fieldKey={field.fieldKey}
+          label={field.label}
+          inputLabel={field.inputLabel}
+          config={config}
+          updateConfig={updateConfig}
+          uppercase={field.uppercase}
+        />
+      ))}
+
+      <div className="flex gap-3 items-center self-start mt-2">
+        <button
+          onClick={() => {
+            updateConfig({
+              title: DEFAULT_CONFIG.title,
+              subtitle: DEFAULT_CONFIG.subtitle,
+              attractions: DEFAULT_CONFIG.attractions,
+              confira: DEFAULT_CONFIG.confira,
+              rules: DEFAULT_CONFIG.rules,
+              exclusiveDate: DEFAULT_CONFIG.exclusiveDate,
+              cardValue: DEFAULT_CONFIG.cardValue,
+              titleFont: DEFAULT_CONFIG.titleFont,
+              titleColor: DEFAULT_CONFIG.titleColor,
+              titleShadow: DEFAULT_CONFIG.titleShadow,
+              titleSize: DEFAULT_CONFIG.titleSize,
+              titlePreset: DEFAULT_CONFIG.titlePreset,
+              subtitleFont: DEFAULT_CONFIG.subtitleFont,
+              subtitleColor: DEFAULT_CONFIG.subtitleColor,
+              subtitleSize: DEFAULT_CONFIG.subtitleSize,
+              attractionsFont: DEFAULT_CONFIG.attractionsFont,
+              attractionsColor: DEFAULT_CONFIG.attractionsColor,
+              attractionsSize: DEFAULT_CONFIG.attractionsSize,
+              rulesFont: DEFAULT_CONFIG.rulesFont,
+              rulesColor: DEFAULT_CONFIG.rulesColor,
+              rulesSize: DEFAULT_CONFIG.rulesSize,
+              confiraFont: DEFAULT_CONFIG.confiraFont,
+              confiraColor: DEFAULT_CONFIG.confiraColor,
+              confiraSize: DEFAULT_CONFIG.confiraSize,
+              exclusiveDateFont: DEFAULT_CONFIG.exclusiveDateFont,
+              exclusiveDateColor: DEFAULT_CONFIG.exclusiveDateColor,
+              exclusiveDateSize: DEFAULT_CONFIG.exclusiveDateSize,
+              cardValueFont: DEFAULT_CONFIG.cardValueFont,
+              cardValueColor: DEFAULT_CONFIG.cardValueColor,
+              cardValueSize: DEFAULT_CONFIG.cardValueSize,
+            });
+          }}
+          className="text-xs text-slate-500 hover:text-slate-800 transition underline underline-offset-2 cursor-pointer"
+        >
+          Restaurar padrão
+        </button>
+        <span className="text-slate-300 text-xs">|</span>
+        <button
+          onClick={() => {
+            updateConfig({
+              title: '',
+              subtitle: '',
+              attractions: '',
+              confira: '',
+              rules: '',
+              exclusiveDate: '',
+              cardValue: '',
+              titleFont: DEFAULT_CONFIG.titleFont,
+              titleColor: DEFAULT_CONFIG.titleColor,
+              titleShadow: DEFAULT_CONFIG.titleShadow,
+              titleSize: DEFAULT_CONFIG.titleSize,
+              titlePreset: DEFAULT_CONFIG.titlePreset,
+              subtitleFont: '',
+              subtitleColor: '',
+              subtitleSize: '',
+              attractionsFont: '',
+              attractionsColor: '',
+              attractionsSize: '',
+              rulesFont: '',
+              rulesColor: '',
+              rulesSize: '',
+              confiraFont: '',
+              confiraColor: '',
+              confiraSize: '',
+              exclusiveDateFont: '',
+              exclusiveDateColor: '',
+              exclusiveDateSize: '',
+              cardValueFont: '',
+              cardValueColor: '',
+              cardValueSize: '',
+            });
+          }}
+          className="text-xs text-red-500 hover:text-red-700 transition underline underline-offset-2 cursor-pointer"
+        >
+          Limpar tudo
+        </button>
+      </div>
     </div>
   );
 }
 
 export default TextosTab;
-

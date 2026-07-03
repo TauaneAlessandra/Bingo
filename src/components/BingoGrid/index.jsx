@@ -11,14 +11,16 @@ const BingoGrid = memo(({
   accentColor = '#f59e0b',
   centerSpaceType = 'star',
   logoData = null,
-  centerLogoData = null
+  centerLogoData = null,
+  gridNumberSize,
+  gridLabelSize
 }) => {
   const { isLight, headerBg, headerText } = getBingoColors(accentColor);
 
   return (
     <div className="border-2 border-black w-full overflow-hidden bg-white text-black">
       {/* Header Row */}
-      <BingoHeader cols={COLS} headerBg={headerBg} headerText={headerText} />
+      <BingoHeader cols={COLS} headerBg={headerBg} headerText={headerText} gridLabelSize={gridLabelSize} />
 
       {/* Number Rows */}
       {ROWS.map(rowIndex => (
@@ -32,6 +34,7 @@ const BingoGrid = memo(({
           centerSpaceType={centerSpaceType}
           logoData={logoData}
           centerLogoData={centerLogoData}
+          gridNumberSize={gridNumberSize}
         />
       ))}
     </div>

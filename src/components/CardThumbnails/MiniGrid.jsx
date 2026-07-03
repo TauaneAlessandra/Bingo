@@ -9,7 +9,7 @@ export default function MiniGrid({ numbers }) {
       ))}
       {[0,1,2,3,4].map(row =>
         cols.map(col => {
-          const val = numbers[col][row];
+          const val = numbers?.[col]?.[row];
           const isFree = val === 'FREE';
           return (
             <div

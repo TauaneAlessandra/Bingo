@@ -1,5 +1,6 @@
 import React from 'react';
 import { Image as ImageIcon, X } from 'lucide-react';
+import ImageUploadField from './ImageUploadField';
 
 function LogoTab({
   config,
@@ -13,6 +14,12 @@ function LogoTab({
   sponsorsLogos,
   handleSponsorsImageUpload,
   removeSponsorsLogo,
+  realizadoPorLogo,
+  handleRealizadoPorImageUpload,
+  resetRealizadoPorLogo,
+  qrCodeLogo,
+  handleQrCodeImageUpload,
+  resetQrCodeLogo,
 }) {
   const accentColor = config.accentColor || '#ffffff';
 
@@ -21,38 +28,15 @@ function LogoTab({
       {/* Logotipo do Cabeçalho */}
       <div className="space-y-3">
         <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Logotipo do Cabeçalho</h3>
-
-        <div className="flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-xl p-6 bg-slate-50 gap-4">
-          {logoData ? (
-            <div className="flex flex-col items-center gap-3">
-              <img src={logoData} alt="Preview Logo" className="w-24 h-24 object-contain rounded-lg border border-slate-200 bg-white p-1" />
-              <button
-                onClick={resetLogo}
-                className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-lg border border-red-200 text-red-500 hover:bg-red-50 transition"
-              >
-                <X className="w-3 h-3" /> Remover Logo
-              </button>
-            </div>
-          ) : (
-            <div className="text-center flex flex-col items-center gap-2">
-              <ImageIcon className="w-8 h-8 text-slate-400" />
-              <p className="text-xs text-slate-500">Usando logotipo padrão do Arraiá</p>
-            </div>
-          )}
-
-          {!logoData && (
-            <label 
-              className="text-xs font-bold px-4 py-2.5 rounded-lg cursor-pointer transition shadow-sm" 
-              style={{ 
-                background: accentColor === '#ffffff' ? '#1e293b' : accentColor, 
-                color: accentColor === '#ffffff' ? '#ffffff' : '#1e1b4b' 
-              }}
-            >
-              Fazer Upload de Logo
-              <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
-            </label>
-          )}
-        </div>
+        <ImageUploadField
+          imageData={logoData}
+          onUpload={handleImageUpload}
+          onReset={resetLogo}
+          accentColor={accentColor}
+          uploadLabel="Fazer Upload de Logo"
+          placeholderText="Usando logotipo padrão do Arraiá"
+          altText="Preview Logo"
+        />
       </div>
 
       <hr className="border-slate-200" />
@@ -99,36 +83,18 @@ function LogoTab({
         </div>
 
         {config.centerSpaceType === 'custom' && (
-          <div className="flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-xl p-4 bg-slate-50 gap-4 mt-2">
-            {centerLogoData ? (
-              <div className="flex flex-col items-center gap-3">
-                <img src={centerLogoData} alt="Center Logo Preview" className="w-16 h-16 object-contain rounded-lg border border-slate-200 bg-white p-1" />
-                <button
-                  onClick={resetCenterLogo}
-                  className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-lg border border-red-200 text-red-500 hover:bg-red-50 transition"
-                >
-                  <X className="w-3 h-3" /> Remover Logo do Centro
-                </button>
-              </div>
-            ) : (
-              <div className="text-center flex flex-col items-center gap-2">
-                <ImageIcon className="w-6 h-6 text-slate-400" />
-                <p className="text-[10px] text-slate-500 font-medium">Nenhuma imagem carregada para o centro</p>
-              </div>
-            )}
-
-            {!centerLogoData && (
-              <label 
-                className="text-xs font-bold px-3.5 py-2 rounded-lg cursor-pointer transition shadow-sm" 
-                style={{ 
-                  background: accentColor === '#ffffff' ? '#1e293b' : accentColor, 
-                  color: accentColor === '#ffffff' ? '#ffffff' : '#1e1b4b' 
-                }}
-              >
-                Fazer Upload de Logo do Centro
-                <input type="file" accept="image/*" onChange={handleCenterImageUpload} className="hidden" />
-              </label>
-            )}
+          <div className="mt-2">
+            <ImageUploadField
+              imageData={centerLogoData}
+              onUpload={handleCenterImageUpload}
+              onReset={resetCenterLogo}
+              accentColor={accentColor}
+              uploadLabel="Fazer Upload de Logo do Centro"
+              removeLabel="Remover Logo do Centro"
+              placeholderText="Nenhuma imagem carregada para o centro"
+              altText="Center Logo Preview"
+              imageSizeClass="w-16 h-16"
+            />
           </div>
         )}
       </div>
@@ -181,6 +147,53 @@ function LogoTab({
             Você pode selecionar múltiplas imagens de uma vez.
           </p>
         </div>
+      </div>
+
+      <hr className="border-slate-200" />
+
+      {/* Realizado Por */}
+      <div className="space-y-3">
+        <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Logo da Empresa (Realizado Por)</h3>
+        
+        <md-outlined-text-field
+          label="Título da Seção (ex: REALIZADO POR)"
+          value={config.realizadoPorTitle}
+          onInput={(e) => updateConfig({ realizadoPorTitle: e.target.value.toUpperCase() })}
+        />
+
+        <ImageUploadField
+          imageData={realizadoPorLogo}
+          onUpload={handleRealizadoPorImageUpload}
+          onReset={resetRealizadoPorLogo}
+          accentColor={accentColor}
+          uploadLabel="Fazer Upload de Logo (Realizado Por)"
+          placeholderText="Nenhum logotipo carregado"
+          altText="Preview Realizado Por"
+        />
+      </div>
+
+      <hr className="border-slate-200" />
+
+      {/* QR Code */}
+      <div className="space-y-3">
+        <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">QR Code (Rodapé)</h3>
+        
+        <md-outlined-text-field
+          label="Título da Seção (ex: ESCANEIE E ACESSE)"
+          value={config.qrCodeTitle}
+          onInput={(e) => updateConfig({ qrCodeTitle: e.target.value.toUpperCase() })}
+        />
+
+        <ImageUploadField
+          imageData={qrCodeLogo}
+          onUpload={handleQrCodeImageUpload}
+          onReset={resetQrCodeLogo}
+          accentColor={accentColor}
+          uploadLabel="Fazer Upload de QR Code"
+          placeholderText="Nenhum QR Code carregado"
+          altText="Preview QR Code"
+          removeLabel="Remover QR Code"
+        />
       </div>
     </div>
   );

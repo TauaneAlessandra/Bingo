@@ -9,7 +9,8 @@ const BingoRow = ({
   accentColor,
   centerSpaceType,
   logoData,
-  centerLogoData
+  centerLogoData,
+  gridNumberSize
 }) => {
   return (
     <div className="grid grid-cols-5 border-b border-black last:border-b-0">
@@ -22,6 +23,7 @@ const BingoRow = ({
           centerSpaceType={centerSpaceType}
           logoData={logoData}
           centerLogoData={centerLogoData}
+          gridNumberSize={gridNumberSize}
         />
       ))}
     </div>

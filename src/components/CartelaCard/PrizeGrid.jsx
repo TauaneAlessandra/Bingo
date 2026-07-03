@@ -9,14 +9,26 @@ const PrizeGrid = memo(({
   centerSpaceType,
   logoData,
   centerLogoData,
+  gridNumberSize,
+  gridLabelSize,
 }) => {
   const { color, light } = colors;
 
   return (
     <div className="flex flex-col">
       <div className="border-2 border-black border-b-0 text-center py-0.5" style={{ backgroundColor: light }}>
-        <span className="text-[9px] font-bold block uppercase">{prizeLabel}</span>
-        <span className="text-[11px] font-black block uppercase">{prizeName}</span>
+        <span 
+          className="font-bold block uppercase leading-none" 
+          style={{ fontSize: gridLabelSize ? (Math.max(8, parseInt(gridLabelSize, 10) - 2)) + 'px' : '9px' }}
+        >
+          {prizeLabel}
+        </span>
+        <span 
+          className="font-black block uppercase leading-normal" 
+          style={{ fontSize: gridLabelSize || '11px' }}
+        >
+          {prizeName}
+        </span>
       </div>
       <BingoGrid
         numbers={numbers}
@@ -24,6 +36,8 @@ const PrizeGrid = memo(({
         centerSpaceType={centerSpaceType}
         logoData={logoData}
         centerLogoData={centerLogoData}
+        gridNumberSize={gridNumberSize}
+        gridLabelSize={gridLabelSize}
       />
     </div>
   );

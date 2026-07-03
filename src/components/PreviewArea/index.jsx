@@ -69,10 +69,14 @@ function PreviewArea({
   logoData,
   centerLogoData,
   sponsorsLogos,
+  realizadoPorLogo,
+  qrCodeLogo,
   showThumbnails,
   backendCards,
   backendOnline,
   loadingCards = false,
+  zoom,
+  setZoom,
 }) {
   const currentCard = backendCards && backendCards[previewIndex];
   const cardNumber = currentCard ? currentCard.card_number : (startNum + previewIndex);
@@ -83,9 +87,7 @@ function PreviewArea({
     <main className="no-print flex-1 bg-[#f1f5f9] flex flex-col relative overflow-hidden">
       {isFallback && (
         <div className="bg-amber-50 border-b border-amber-200 px-4 py-2.5 text-xs text-amber-800 flex justify-between items-center shrink-0 font-sans shadow-sm">
-          <span>
-            ⚠️ <strong>Intervalo não gravado no banco de dados SQLite.</strong> Exibindo cartelas locais ( seeded ). Para salvá-las e garantir a não repetição física permanente, gere este lote na aba <strong>Banco</strong>.
-          </span>
+          <span>Aviso: Modo Online ativado, mas as cartelas geradas ainda não foram carregadas. Exibindo visualização local temporária.</span>
         </div>
       )}
       <PreviewToolbar
@@ -93,6 +95,8 @@ function PreviewArea({
         setPreviewIndex={setPreviewIndex}
         quantity={quantity}
         startNum={startNum}
+        zoom={zoom}
+        setZoom={setZoom}
       />
 
       {/* Canvas viewport */}
@@ -101,7 +105,10 @@ function PreviewArea({
           {loadingCards ? (
             <CardSkeleton />
           ) : (
-            <div className="transition-all duration-300 transform scale-100">
+            <div 
+              className="transition-all duration-300 transform origin-top"
+              style={{ transform: `scale(${zoom / 100})` }}
+            >
               <CartelaCard
                 number={cardNumber}
                 grids={cardGrids}
@@ -109,6 +116,8 @@ function PreviewArea({
                 logoData={logoData}
                 centerLogoData={centerLogoData}
                 sponsorsLogos={sponsorsLogos}
+                realizadoPorLogo={realizadoPorLogo}
+                qrCodeLogo={qrCodeLogo}
               />
             </div>
           )}

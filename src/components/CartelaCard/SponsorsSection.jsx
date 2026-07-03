@@ -1,25 +1,70 @@
 import React from 'react';
+import PlaceholderSponsors from './PlaceholderSponsors';
+import SponsorsColumn from './SponsorsColumn';
+import QRCodeColumn from './QRCodeColumn';
+import RealizadoPorColumn from './RealizadoPorColumn';
 
-const SponsorsSection = ({ sponsorsLogos, sponsorsTitle }) => {
+const SponsorsSection = ({
+  sponsorsLogos,
+  sponsorsTitle,
+  realizadoPorLogo,
+  realizadoPorTitle,
+  qrCodeLogo,
+  qrCodeTitle,
+  textColor,
+}) => {
+  const hasSponsors = sponsorsLogos && sponsorsLogos.length > 0;
+  const hasRealizado = !!realizadoPorLogo;
+  const hasQrCode = !!qrCodeLogo;
+
+  const styleText = { color: textColor || '#6b7280' };
+
+  if (!hasSponsors && !hasRealizado && !hasQrCode) {
+    return (
+      <PlaceholderSponsors
+        sponsorsTitle={sponsorsTitle}
+        styleText={styleText}
+      />
+    );
+  }
+
   return (
-    <div className="mt-2 pt-1.5 border-t-2 border-black flex flex-col items-center justify-center min-h-[45px]">
-      {sponsorsLogos && sponsorsLogos.length > 0 ? (
-        <div className="w-full flex flex-col items-center">
-          <span className="text-[8px] font-black text-gray-500 uppercase tracking-wider mb-1">
-            {sponsorsTitle || 'PATROCINADORES'}
-          </span>
-          <div className="flex flex-wrap items-center justify-center gap-4 w-full">
-            {sponsorsLogos.map((logo, idx) => (
-              <img key={idx} src={logo} alt={`Patrocinador ${idx + 1}`} className="max-h-[26px] max-w-[80px] object-contain" />
-            ))}
-          </div>
-        </div>
-      ) : (
-        <div className="border border-dashed border-gray-400 rounded w-full py-1 text-[8px] font-bold text-gray-500 uppercase tracking-wider flex items-center justify-center gap-1.5">
-          <span className="w-1 h-1 rounded-full bg-gray-400"></span>
-          <span>{sponsorsTitle || 'ESPAÇO PARA PATROCINADORES'}</span>
-          <span className="w-1 h-1 rounded-full bg-gray-400"></span>
-        </div>
+    <div className="mt-2 pt-1.5 border-t-2 border-black flex items-stretch justify-between gap-4 min-h-[45px] w-full">
+      {/* Patrocinadores */}
+      {hasSponsors && (
+        <SponsorsColumn
+          sponsorsLogos={sponsorsLogos}
+          sponsorsTitle={sponsorsTitle}
+          styleText={styleText}
+        />
+      )}
+
+      {/* Divider */}
+      {hasSponsors && (hasQrCode || hasRealizado) && (
+        <div className="w-[1.5px] bg-black self-stretch my-1" />
+      )}
+
+      {/* QR Code */}
+      {hasQrCode && (
+        <QRCodeColumn
+          qrCodeLogo={qrCodeLogo}
+          qrCodeTitle={qrCodeTitle}
+          styleText={styleText}
+        />
+      )}
+
+      {/* Divider */}
+      {hasQrCode && hasRealizado && (
+        <div className="w-[1.5px] bg-black self-stretch my-1" />
+      )}
+
+      {/* Realizado Por */}
+      {hasRealizado && (
+        <RealizadoPorColumn
+          realizadoPorLogo={realizadoPorLogo}
+          realizadoPorTitle={realizadoPorTitle}
+          styleText={styleText}
+        />
       )}
     </div>
   );

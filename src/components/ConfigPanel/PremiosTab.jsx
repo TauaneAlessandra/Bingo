@@ -1,26 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Plus, Trash2 } from 'lucide-react';
-import { useDebouncedCallback } from '../../utils/useDebounce';
 
-// Individual prize input with local state + debounced sync
+// Individual prize input with direct sync
 function PrizeInput({ idx, value, updatePrize }) {
-  const [localVal, setLocalVal] = useState(value);
-
-  useEffect(() => { setLocalVal(value); }, [value]);
-
-  const debouncedUpdate = useDebouncedCallback((v) => updatePrize(idx, v), 300);
-
   return (
     <div className="flex items-center gap-2">
       <span className="text-xs font-bold text-slate-500 w-4 shrink-0">{idx + 1}º</span>
       <div className="flex-1">
         <md-outlined-text-field
           label={`${idx + 1}º Prêmio`}
-          value={localVal}
-          onInput={(e) => {
-            setLocalVal(e.target.value);
-            debouncedUpdate(e.target.value);
-          }}
+          value={value}
+          onInput={(e) => updatePrize(idx, e.target.value)}
         />
       </div>
     </div>

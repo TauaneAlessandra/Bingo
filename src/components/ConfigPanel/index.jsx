@@ -2,10 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Heart } from 'lucide-react';
 import TextosTab from './TextosTab';
 import PremiosTab from './PremiosTab';
+import CartelaTab from './CartelaTab';
 import ConfigTab from './ConfigTab';
 import LogoTab from './LogoTab';
 import AvancadoTab from './AvancadoTab';
-import DatabaseTab from './DatabaseTab';
 
 function ConfigPanel({
   config,
@@ -24,6 +24,12 @@ function ConfigPanel({
   sponsorsLogos,
   handleSponsorsImageUpload,
   removeSponsorsLogo,
+  realizadoPorLogo,
+  handleRealizadoPorImageUpload,
+  resetRealizadoPorLogo,
+  qrCodeLogo,
+  handleQrCodeImageUpload,
+  resetQrCodeLogo,
   addPrize,
   removePrize,
   updatePrize,
@@ -37,7 +43,7 @@ function ConfigPanel({
   useEffect(() => {
     const tabs = tabsRef.current;
     if (tabs) {
-      const tabIndices = ['header', 'prizes', 'generation', 'logo', 'advanced', 'database'];
+      const tabIndices = ['header', 'prizes', 'card', 'generation', 'logo', 'advanced'];
       const handleTabChange = () => setActiveTab(tabIndices[tabs.activeTabIndex] || 'header');
       tabs.addEventListener('change', handleTabChange);
       return () => tabs.removeEventListener('change', handleTabChange);
@@ -50,10 +56,10 @@ function ConfigPanel({
       <md-tabs ref={tabsRef} active-index="0" className="border-b border-slate-200">
         <md-secondary-tab inline-icon>Textos</md-secondary-tab>
         <md-secondary-tab inline-icon>Prêmios</md-secondary-tab>
+        <md-secondary-tab inline-icon>Cartela</md-secondary-tab>
         <md-secondary-tab inline-icon>Config</md-secondary-tab>
         <md-secondary-tab inline-icon>Logo</md-secondary-tab>
         <md-secondary-tab inline-icon>Avançado</md-secondary-tab>
-        <md-secondary-tab inline-icon>Banco</md-secondary-tab>
       </md-tabs>
 
       <div className="flex-1 overflow-y-auto p-5 space-y-5">
@@ -71,6 +77,13 @@ function ConfigPanel({
             addPrize={addPrize} 
             removePrize={removePrize} 
             updatePrize={updatePrize} 
+          />
+        )}
+
+        {activeTab === 'card' && (
+          <CartelaTab 
+            config={config} 
+            updateConfig={updateConfig} 
           />
         )}
 
@@ -96,6 +109,12 @@ function ConfigPanel({
             sponsorsLogos={sponsorsLogos} 
             handleSponsorsImageUpload={handleSponsorsImageUpload} 
             removeSponsorsLogo={removeSponsorsLogo} 
+            realizadoPorLogo={realizadoPorLogo}
+            handleRealizadoPorImageUpload={handleRealizadoPorImageUpload}
+            resetRealizadoPorLogo={resetRealizadoPorLogo}
+            qrCodeLogo={qrCodeLogo}
+            handleQrCodeImageUpload={handleQrCodeImageUpload}
+            resetQrCodeLogo={resetQrCodeLogo}
           />
         )}
 
@@ -107,20 +126,13 @@ function ConfigPanel({
             resetAll={resetAll} 
           />
         )}
-
-        {activeTab === 'database' && (
-          <DatabaseTab 
-            config={config} 
-            refreshCards={refreshCards} 
-          />
-        )}
       </div>
 
       {/* Sidebar Footer */}
       <div className="p-4 border-t border-slate-200 bg-slate-50 text-[10px] text-slate-500 flex justify-between items-center">
         <span>Versão 2.0.0</span>
-        <span className="flex items-center">
-          <Heart className="w-3.5 h-3.5 text-red-500 mr-1 fill-red-500" /> Feito para ADC Embraer
+        <span className="flex items-center font-medium">
+          <Heart className="w-3.5 h-3.5 text-red-500 mr-1 fill-red-500" /> Feito por Tauane Alessandra
         </span>
       </div>
     </aside>

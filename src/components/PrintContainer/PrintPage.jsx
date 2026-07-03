@@ -8,6 +8,8 @@ function PrintPage({
   logoData,
   centerLogoData,
   sponsorsLogos,
+  realizadoPorLogo,
+  qrCodeLogo,
 }) {
   const isObj1 = typeof card1 === 'object' && card1 !== null;
   const num1 = isObj1 ? card1.card_number : card1;
@@ -27,6 +29,8 @@ function PrintPage({
           logoData={logoData} 
           centerLogoData={centerLogoData} 
           sponsorsLogos={sponsorsLogos} 
+          realizadoPorLogo={realizadoPorLogo}
+          qrCodeLogo={qrCodeLogo}
         />
       </div>
       <div className="print-card-wrapper">
@@ -38,6 +42,8 @@ function PrintPage({
             logoData={logoData} 
             centerLogoData={centerLogoData} 
             sponsorsLogos={sponsorsLogos} 
+            realizadoPorLogo={realizadoPorLogo}
+            qrCodeLogo={qrCodeLogo}
           />
         ) : (
           <div className="w-full h-full border border-dashed border-gray-300 rounded flex items-center justify-center text-gray-400 text-xs">
