@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { memo } from 'react';
+import PropTypes from 'prop-types';
 import { DefaultToucanLogo } from '..';
 
-const CardHeaderDetailsSection = ({ config, logoData, isWhiteAccent, accentColor }) => {
+const CardHeaderDetailsSection = memo(({ config, logoData, isWhiteAccent, accentColor }) => {
   return (
     <div className="pt-2 flex items-center gap-2">
       {/* Small logo on the left */}
@@ -65,6 +66,15 @@ const CardHeaderDetailsSection = ({ config, logoData, isWhiteAccent, accentColor
       </div>
     </div>
   );
+});
+
+CardHeaderDetailsSection.displayName = 'CardHeaderDetailsSection';
+
+CardHeaderDetailsSection.propTypes = {
+  config: PropTypes.object.isRequired,
+  logoData: PropTypes.string,
+  isWhiteAccent: PropTypes.bool,
+  accentColor: PropTypes.string,
 };
 
 export default CardHeaderDetailsSection;

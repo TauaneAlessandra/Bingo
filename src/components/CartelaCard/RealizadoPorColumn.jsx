@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { memo } from 'react';
+import PropTypes from 'prop-types';
 
-const RealizadoPorColumn = ({ realizadoPorLogo, realizadoPorTitle, styleText }) => {
+const RealizadoPorColumn = memo(({ realizadoPorLogo, realizadoPorTitle, styleText }) => {
   return (
     <div className="flex flex-col items-center justify-center flex-1">
       <span className="text-[8px] font-black uppercase tracking-wider mb-1" style={styleText}>
@@ -11,6 +12,14 @@ const RealizadoPorColumn = ({ realizadoPorLogo, realizadoPorTitle, styleText }) 
       </div>
     </div>
   );
+});
+
+RealizadoPorColumn.displayName = 'RealizadoPorColumn';
+
+RealizadoPorColumn.propTypes = {
+  realizadoPorLogo: PropTypes.string.isRequired,
+  realizadoPorTitle: PropTypes.string,
+  styleText: PropTypes.object,
 };
 
 export default RealizadoPorColumn;

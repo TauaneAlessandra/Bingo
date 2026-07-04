@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { memo } from 'react';
+import PropTypes from 'prop-types';
 import PrizeGrid from './PrizeGrid';
 
-const PrizeGridsContainer = ({
+const PrizeGridsContainer = memo(({
   grids,
   prizes,
   gridColors,
@@ -70,6 +71,25 @@ const PrizeGridsContainer = ({
       )}
     </div>
   );
+});
+
+PrizeGridsContainer.displayName = 'PrizeGridsContainer';
+
+PrizeGridsContainer.propTypes = {
+  grids: PropTypes.arrayOf(PropTypes.array).isRequired,
+  prizes: PropTypes.arrayOf(PropTypes.string).isRequired,
+  gridColors: PropTypes.arrayOf(
+    PropTypes.shape({
+      color: PropTypes.string.isRequired,
+      light: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  centerSpaceType: PropTypes.string,
+  logoData: PropTypes.string,
+  centerLogoData: PropTypes.string,
+  gridNumberSize: PropTypes.string,
+  gridLabelSize: PropTypes.string,
+  gridNumberFont: PropTypes.string,
 };
 
 export default PrizeGridsContainer;

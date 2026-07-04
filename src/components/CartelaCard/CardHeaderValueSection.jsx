@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { memo } from 'react';
+import PropTypes from 'prop-types';
 
-const CardHeaderValueSection = ({ config, formattedNum }) => {
+const CardHeaderValueSection = memo(({ config, formattedNum }) => {
   return (
     <div className="border-l border-black flex items-stretch divide-x divide-black">
       {config.cardValue && (
@@ -25,6 +26,13 @@ const CardHeaderValueSection = ({ config, formattedNum }) => {
       </div>
     </div>
   );
+});
+
+CardHeaderValueSection.displayName = 'CardHeaderValueSection';
+
+CardHeaderValueSection.propTypes = {
+  config: PropTypes.object.isRequired,
+  formattedNum: PropTypes.string.isRequired,
 };
 
 export default CardHeaderValueSection;

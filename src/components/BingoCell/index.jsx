@@ -1,6 +1,20 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
+import PropTypes from 'prop-types';
 import FreeCell from './FreeCell';
 import NumberCell from './NumberCell';
+
+const getCellStyle = (isFree, isLight, accentColor) => {
+  if (!isFree) return {};
+  if (isLight) return { backgroundColor: '#f3f4f6' };
+  
+  if (accentColor) {
+    return accentColor.startsWith('#')
+      ? { backgroundColor: `${accentColor}22` }
+      : { backgroundColor: accentColor, opacity: 0.85 };
+  }
+  
+  return { backgroundColor: 'rgba(0, 0, 0, 0.05)' };
+};
 
 const BingoCell = memo(({
   value,
@@ -9,30 +23,17 @@ const BingoCell = memo(({
   centerSpaceType = 'star',
   logoData = null,
   centerLogoData = null,
-  gridNumberSize
+  gridNumberSize = '18px'
 }) => {
   const isFree = value === 'FREE';
-
-  let cellStyle = {};
-  if (isFree) {
-    if (isLight) {
-      cellStyle = { backgroundColor: '#f3f4f6' };
-    } else if (accentColor && accentColor.startsWith('#')) {
-      // Safely append 22 for transparency on hex colors
-      cellStyle = { backgroundColor: accentColor + '22' };
-    } else if (accentColor) {
-      // Fallback for non-hex colors (e.g. named colors or rgb)
-      cellStyle = { backgroundColor: accentColor, opacity: 0.85 };
-    } else {
-      cellStyle = { backgroundColor: 'rgba(0, 0, 0, 0.05)' };
-    }
-  }
+  const cellStyle = getCellStyle(isFree, isLight, accentColor);
 
   return (
     <div
-      className="border-r border-black last:border-r-0 flex items-center justify-center h-[34px] print:h-[28px]"
+      className="border-r border-black last:border-r-0 flex items-center justify-center h-[34px] print:h-[28px] w-full"
       style={cellStyle}
-      aria-label={isFree ? "Espaço Livre" : undefined}
+      role="gridcell"
+      aria-label={isFree ? "Espaço Livre" : `Número ${value}`}
     >
       {isFree ? (
         <FreeCell
@@ -50,6 +51,16 @@ const BingoCell = memo(({
 });
 
 BingoCell.displayName = 'BingoCell';
+
+BingoCell.propTypes = {
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  isLight: PropTypes.bool.isRequired,
+  accentColor: PropTypes.string,
+  centerSpaceType: PropTypes.string,
+  logoData: PropTypes.string,
+  centerLogoData: PropTypes.string,
+  gridNumberSize: PropTypes.string,
+};
 
 export default BingoCell;
 

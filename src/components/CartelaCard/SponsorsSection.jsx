@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { memo } from 'react';
+import PropTypes from 'prop-types';
 import PlaceholderSponsors from './PlaceholderSponsors';
 import SponsorsColumn from './SponsorsColumn';
 import QRCodeColumn from './QRCodeColumn';
 import RealizadoPorColumn from './RealizadoPorColumn';
 
-const SponsorsSection = ({
+const SponsorsSection = memo(({
   sponsorsLogos,
   sponsorsTitle,
   realizadoPorLogo,
@@ -68,6 +69,18 @@ const SponsorsSection = ({
       )}
     </div>
   );
+});
+
+SponsorsSection.displayName = 'SponsorsSection';
+
+SponsorsSection.propTypes = {
+  sponsorsLogos: PropTypes.arrayOf(PropTypes.string),
+  sponsorsTitle: PropTypes.string,
+  realizadoPorLogo: PropTypes.string,
+  realizadoPorTitle: PropTypes.string,
+  qrCodeLogo: PropTypes.string,
+  qrCodeTitle: PropTypes.string,
+  textColor: PropTypes.string,
 };
 
 export default SponsorsSection;

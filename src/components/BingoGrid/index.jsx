@@ -50,8 +50,8 @@ BingoGrid.propTypes = {
   centerSpaceType: PropTypes.string,
   logoData: PropTypes.string,
   centerLogoData: PropTypes.string,
-  gridNumberSize: PropTypes.string,
-  gridLabelSize: PropTypes.string,
+  gridNumberSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  gridLabelSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 export default BingoGrid;

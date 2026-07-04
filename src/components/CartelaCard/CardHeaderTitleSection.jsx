@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { memo } from 'react';
+import PropTypes from 'prop-types';
 
-const CardHeaderTitleSection = ({ config }) => {
+const CardHeaderTitleSection = memo(({ config }) => {
   return (
     <div className="flex-1 pr-2 text-left">
       <h1 
@@ -30,6 +31,12 @@ const CardHeaderTitleSection = ({ config }) => {
       </p>
     </div>
   );
+});
+
+CardHeaderTitleSection.displayName = 'CardHeaderTitleSection';
+
+CardHeaderTitleSection.propTypes = {
+  config: PropTypes.object.isRequired,
 };
 
 export default CardHeaderTitleSection;

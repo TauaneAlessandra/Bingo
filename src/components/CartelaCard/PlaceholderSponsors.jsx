@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { memo } from 'react';
+import PropTypes from 'prop-types';
 
-const PlaceholderSponsors = ({ sponsorsTitle, styleText }) => {
+const PlaceholderSponsors = memo(({ sponsorsTitle, styleText }) => {
   return (
     <div className="mt-2 pt-1.5 border-t-2 border-black flex flex-col items-center justify-center min-h-[45px]">
       <div className="border border-dashed border-gray-400 rounded w-full py-1 text-[8px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5" style={styleText}>
@@ -10,6 +11,13 @@ const PlaceholderSponsors = ({ sponsorsTitle, styleText }) => {
       </div>
     </div>
   );
+});
+
+PlaceholderSponsors.displayName = 'PlaceholderSponsors';
+
+PlaceholderSponsors.propTypes = {
+  sponsorsTitle: PropTypes.string,
+  styleText: PropTypes.object,
 };
 
 export default PlaceholderSponsors;

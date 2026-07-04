@@ -1,45 +1,47 @@
-import React, { useState, memo } from 'react';
+import { useState, memo } from 'react';
+import PropTypes from 'prop-types';
 
-const FreeCell = memo(({ isLight, centerSpaceType, logoData, centerLogoData, fontSize }) => {
+const FreeCell = memo(({ isLight, centerSpaceType, logoData, centerLogoData, fontSize = '18px' }) => {
   const [hasError, setHasError] = useState(false);
 
   const handleImageError = () => {
     setHasError(true);
   };
 
-  if (!hasError) {
-    if (centerSpaceType === 'logo' && logoData) {
-      return (
-        <img
-          src={logoData}
-          alt="Logo"
-          onError={handleImageError}
-          className="max-w-full max-h-full p-1 object-contain"
-        />
-      );
-    }
+  const showLogo = !hasError && centerSpaceType === 'logo' && logoData;
+  const showCustom = !hasError && centerSpaceType === 'custom' && centerLogoData;
 
-    if (centerSpaceType === 'custom' && centerLogoData) {
-      return (
-        <img
-          src={centerLogoData}
-          alt="Center Logo"
-          onError={handleImageError}
-          className="max-w-full max-h-full p-1 object-contain"
-        />
-      );
-    }
+  if (showLogo) {
+    return (
+      <img
+        src={logoData}
+        alt="Logo Principal"
+        onError={handleImageError}
+        className="max-w-full max-h-full p-1 object-contain select-none"
+      />
+    );
   }
 
-  // Default / Fallback to Star
+  if (showCustom) {
+    return (
+      <img
+        src={centerLogoData}
+        alt="Logo Central"
+        onError={handleImageError}
+        className="max-w-full max-h-full p-1 object-contain select-none"
+      />
+    );
+  }
+
+  // Fallback default: Estrela
   return (
     <span
-      className="leading-none"
-      title="Casa Livre"
-      aria-hidden="true"
+      className="leading-none select-none"
+      role="img"
+      aria-label="Espaço Livre com Estrela"
       style={{
-        filter: isLight ? 'grayscale(100%)' : 'grayscale(0%)',
-        fontSize: fontSize || '18px'
+        filter: isLight ? 'grayscale(100%)' : 'none',
+        fontSize
       }}
     >
       ⭐
@@ -48,6 +50,14 @@ const FreeCell = memo(({ isLight, centerSpaceType, logoData, centerLogoData, fon
 });
 
 FreeCell.displayName = 'FreeCell';
+
+FreeCell.propTypes = {
+  isLight: PropTypes.bool.isRequired,
+  centerSpaceType: PropTypes.oneOf(['star', 'logo', 'custom']),
+  logoData: PropTypes.string,
+  centerLogoData: PropTypes.string,
+  fontSize: PropTypes.string,
+};
 
 export default FreeCell;
 

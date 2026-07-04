@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { memo } from 'react';
+import PropTypes from 'prop-types';
 
-const SponsorsColumn = ({ sponsorsLogos, sponsorsTitle, styleText }) => {
+const SponsorsColumn = memo(({ sponsorsLogos, sponsorsTitle, styleText }) => {
   return (
     <div className="flex flex-col items-center justify-center flex-1">
       <span className="text-[8px] font-black uppercase tracking-wider mb-1" style={styleText}>
@@ -13,6 +14,14 @@ const SponsorsColumn = ({ sponsorsLogos, sponsorsTitle, styleText }) => {
       </div>
     </div>
   );
+});
+
+SponsorsColumn.displayName = 'SponsorsColumn';
+
+SponsorsColumn.propTypes = {
+  sponsorsLogos: PropTypes.arrayOf(PropTypes.string).isRequired,
+  sponsorsTitle: PropTypes.string,
+  styleText: PropTypes.object,
 };
 
 export default SponsorsColumn;

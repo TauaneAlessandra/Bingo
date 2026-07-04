@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import PropTypes from 'prop-types';
 import { BingoGrid } from '..';
 
 const PrizeGrid = memo(({
@@ -44,5 +45,20 @@ const PrizeGrid = memo(({
 });
 
 PrizeGrid.displayName = 'PrizeGrid';
+
+PrizeGrid.propTypes = {
+  prizeLabel: PropTypes.string.isRequired,
+  prizeName: PropTypes.string,
+  numbers: PropTypes.array.isRequired,
+  colors: PropTypes.shape({
+    color: PropTypes.string.isRequired,
+    light: PropTypes.string.isRequired,
+  }).isRequired,
+  centerSpaceType: PropTypes.string,
+  logoData: PropTypes.string,
+  centerLogoData: PropTypes.string,
+  gridNumberSize: PropTypes.string,
+  gridLabelSize: PropTypes.string,
+};
 
 export default PrizeGrid;

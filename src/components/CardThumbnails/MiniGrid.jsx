@@ -1,13 +1,17 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
+/**
+ * MiniGrid renders a tiny 5x5 representation of a Bingo card grid.
+ */
 export default function MiniGrid({ numbers }) {
   const cols = ['B', 'I', 'N', 'G', 'O'];
   return (
     <div className="grid grid-cols-5 gap-px bg-black border border-black text-[5px] leading-none">
-      {['B','I','N','G','O'].map(c => (
+      {cols.map(c => (
         <div key={c} className="bg-yellow-100 text-center font-black py-0.5">{c}</div>
       ))}
-      {[0,1,2,3,4].map(row =>
+      {[0, 1, 2, 3, 4].map(row =>
         cols.map(col => {
           const val = numbers?.[col]?.[row];
           const isFree = val === 'FREE';
@@ -24,3 +28,11 @@ export default function MiniGrid({ numbers }) {
     </div>
   );
 }
+
+MiniGrid.propTypes = {
+  numbers: PropTypes.objectOf(
+    PropTypes.arrayOf(
+      PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+    )
+  )
+};
