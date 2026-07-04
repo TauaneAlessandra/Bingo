@@ -1,0 +1,72 @@
+/* ── Design Tokens ─────────────────────────────────────────────────────────── */
+:root {
+  /* Material colors */
+  --md-sys-color-primary: #1e293b;
+  --md-sys-color-on-primary: #ffffff;
+  --md-sys-color-primary-container: #f1f5f9;
+  --md-sys-color-on-primary-container: #0f172a;
+  --md-sys-color-surface: #ffffff;
+  --md-sys-color-on-surface: #0f172a;
+  --md-sys-color-surface-container: #f8fafc;
+  --md-sys-color-surface-container-high: #e2e8f0;
+  --md-sys-color-outline: #94a3b8;
+  --md-sys-color-outline-variant: #cbd5e1;
+  --md-sys-typescale-brand-font: 'Roboto', sans-serif;
+  --md-sys-typescale-plain-font: 'Roboto', sans-serif;
+
+  /* UI Brand Accent (indigo — separado do accent do usuário na cartela) */
+  --ui-accent: #6366f1;
+  --ui-accent-light: #eef2ff;
+  --ui-accent-mid: #818cf8;
+  --ui-accent-dark: #4338ca;
+
+  /* Sidebar */
+  --sidebar-bg: #ffffff;
+  --sidebar-border: #e2e8f0;
+  --sidebar-tab-active-bg: #eef2ff;
+  --sidebar-tab-active-color: #4338ca;
+  --sidebar-tab-inactive-color: #64748b;
+  --sidebar-section-card-bg: #ffffff;
+  --sidebar-section-card-border: #e2e8f0;
+
+  /* Header */
+  --header-bg: #ffffff;
+  --header-border: #e2e8f0;
+
+  /* Preview area */
+  --preview-bg: #ffffff;
+  --preview-dot-color: #f1f5f9;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 200ms ease;
+  --transition-slow: 300ms ease;
+}
+
+.dark {
+  --ui-accent: #818cf8;
+  --ui-accent-light: #1e1b4b;
+  --ui-accent-mid: #6366f1;
+  --ui-accent-dark: #a5b4fc;
+
+  --sidebar-bg: #0f172a;
+  --sidebar-border: #1e293b;
+  --sidebar-tab-active-bg: #1e1b4b;
+  --sidebar-tab-active-color: #a5b4fc;
+  --sidebar-tab-inactive-color: #94a3b8;
+  --sidebar-section-card-bg: #1e293b;
+  --sidebar-section-card-border: #334155;
+
+  --header-bg: #0f172a;
+  --header-border: #1e293b;
+
+  --preview-bg: #020617;
+  --preview-dot-color: #1e293b;
+}
+
+@theme {
+  --font-sans: 'Inter', sans-serif;
+  --font-outfit: 'Outfit', sans-serif;
+  --font-mono: 'Share Tech Mono', monospace;
+  --font-roboto: 'Roboto', sans-serif;
+}

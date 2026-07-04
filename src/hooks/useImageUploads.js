@@ -1,32 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
-import { getImage, setImage, deleteImage, clearImages } from '../utils/indexedDB';
-
-/**
- * Creates a pair of stable handlers (handleUpload, reset) for a single image slot.
- *
- * @param {string} key - The IndexedDB key for this image.
- * @param {(value: string|null) => void} setState - The React state setter for this image.
- * @returns {{ handleUpload: (e: Event) => void, reset: () => void }}
- */
-function createImageHandlers(key, setState) {
-  const handleUpload = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setState(reader.result);
-      setImage(key, reader.result);
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const reset = () => {
-    setState(null);
-    deleteImage(key);
-  };
-
-  return { handleUpload, reset };
-}
+import { getImage, setImage, clearImages } from '../utils/indexedDB';
+import { createImageHandlers } from './imageUploadHandlers';
 
 export function useImageUploads() {
   const [logoData, setLogoData] = useState(null);
@@ -35,7 +9,6 @@ export function useImageUploads() {
   const [qrCodeLogo, setQrCodeLogo] = useState(null);
   const [centerLogoData, setCenterLogoData] = useState(null);
 
-  // Load from IndexedDB on mount
   useEffect(() => {
     async function loadStoredImages() {
       const [logo, sponsors, realizado, qrCode, centerLogo] = await Promise.all([
@@ -55,7 +28,6 @@ export function useImageUploads() {
     loadStoredImages();
   }, []);
 
-  // ── Single-image handlers (generated via factory) ──────────────────────────
   const { handleUpload: handleImageUpload, reset: resetLogo } =
     createImageHandlers('logoData', setLogoData);
 
@@ -68,7 +40,6 @@ export function useImageUploads() {
   const { handleUpload: handleQrCodeImageUpload, reset: resetQrCodeLogo } =
     createImageHandlers('qrCodeLogo', setQrCodeLogo);
 
-  // ── Sponsors (multi-image) ─────────────────────────────────────────────────
   const handleSponsorsImageUpload = useCallback((e) => {
     const files = Array.from(e.target.files ?? []);
     if (files.length === 0) return;
@@ -94,7 +65,6 @@ export function useImageUploads() {
     });
   }, []);
 
-  // ── Clear all ──────────────────────────────────────────────────────────────
   const clearAllImages = useCallback(() => {
     setLogoData(null);
     setSponsorsLogos([]);
@@ -105,22 +75,10 @@ export function useImageUploads() {
   }, []);
 
   return {
-    logoData,
-    sponsorsLogos,
-    realizadoPorLogo,
-    qrCodeLogo,
-    centerLogoData,
-    handleImageUpload,
-    resetLogo,
-    handleSponsorsImageUpload,
-    removeSponsorsLogo,
-    handleCenterImageUpload,
-    resetCenterLogo,
-    handleRealizadoPorImageUpload,
-    resetRealizadoPorLogo,
-    handleQrCodeImageUpload,
-    resetQrCodeLogo,
-    clearAllImages,
+    logoData, sponsorsLogos, realizadoPorLogo, qrCodeLogo, centerLogoData,
+    handleImageUpload, resetLogo, handleSponsorsImageUpload, removeSponsorsLogo,
+    handleCenterImageUpload, resetCenterLogo, handleRealizadoPorImageUpload,
+    resetRealizadoPorLogo, handleQrCodeImageUpload, resetQrCodeLogo, clearAllImages,
   };
 }
 

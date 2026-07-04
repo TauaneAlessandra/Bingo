@@ -1,0 +1,68 @@
+/* ── Print Stylesheet ──────────────────────────────────────────────────────── */
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 0;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-container {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .print-page {
+    page-break-after: always;
+    break-inside: avoid;
+    display: flex !important;
+    flex-direction: row !important;
+    width: 297mm;
+    height: 210mm;
+    padding: 8mm 12mm !important;
+    box-sizing: border-box !important;
+    background: white !important;
+    gap: 0 !important;
+  }
+
+  /* Last page — no forced page break */
+  .print-page:last-child {
+    page-break-after: auto;
+  }
+
+  .print-card-wrapper {
+    width: 50% !important;
+    box-sizing: border-box !important;
+    padding: 0 8mm !important;
+    display: flex !important;
+    align-items: stretch !important;
+  }
+
+  /* Dashed cut line between cards */
+  .print-card-wrapper:first-child {
+    border-right: 1.5px dashed #aaa !important;
+  }
+
+  /* Override web card sizing for print */
+  .print-card-wrapper .preview-card {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: unset !important;
+    box-shadow: none !important;
+    box-sizing: border-box !important;
+  }
+}

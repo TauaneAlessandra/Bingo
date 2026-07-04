@@ -11,4 +11,4 @@ export { default as PrintContainer } from './PrintContainer/index';
 export { default as PrintModal } from './PrintModal/index';
 export { default as ValidationMode } from './ValidationMode/index';
 export { default as ErrorBoundary } from './ErrorBoundary';
-
+export { default as AppModals } from './AppModals';
