@@ -1,12 +1,21 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Heart } from 'lucide-react';
+import { Heart, FileText, Trophy, Palette, Image, Settings, Wrench } from 'lucide-react';
 import TextosTab from './TextosTab';
 import PremiosTab from './PremiosTab';
 import CartelaTab from './CartelaTab';
 import ConfigTab from './ConfigTab';
 import LogoTab from './LogoTab';
 import AvancadoTab from './AvancadoTab';
+
+const TABS = [
+  { id: 'header',     label: 'Textos',   Icon: FileText },
+  { id: 'prizes',     label: 'Prêmios',  Icon: Trophy   },
+  { id: 'card',       label: 'Cartela',  Icon: Palette  },
+  { id: 'logo',       label: 'Logo',     Icon: Image    },
+  { id: 'generation', label: 'Config',   Icon: Settings },
+  { id: 'advanced',   label: 'Avançado', Icon: Wrench   },
+];
 
 function ConfigPanel({
   config,
@@ -37,78 +46,73 @@ function ConfigPanel({
   resetAll,
 }) {
   const [activeTab, setActiveTab] = useState('header');
-  const tabsRef = useRef(null);
-
-  // ── Tab Syncing ──
-  useEffect(() => {
-    const tabs = tabsRef.current;
-    if (tabs) {
-      const tabIndices = ['header', 'prizes', 'card', 'generation', 'logo', 'advanced'];
-      const handleTabChange = () => setActiveTab(tabIndices[tabs.activeTabIndex] || 'header');
-      tabs.addEventListener('change', handleTabChange);
-      return () => tabs.removeEventListener('change', handleTabChange);
-    }
-  }, []);
 
   return (
-    <aside className="no-print w-[400px] bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col shrink-0 transition-colors duration-200">
-      {/* Material Web Tabs */}
-      <md-tabs ref={tabsRef} active-index="0" className="border-b border-slate-200 dark:border-slate-800">
-        <md-secondary-tab inline-icon>Textos</md-secondary-tab>
-        <md-secondary-tab inline-icon>Prêmios</md-secondary-tab>
-        <md-secondary-tab inline-icon>Cartela</md-secondary-tab>
-        <md-secondary-tab inline-icon>Config</md-secondary-tab>
-        <md-secondary-tab inline-icon>Logo</md-secondary-tab>
-        <md-secondary-tab inline-icon>Avançado</md-secondary-tab>
-      </md-tabs>
+    <aside className="no-print w-[380px] bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col shrink-0 transition-colors duration-200">
+      {/* ── Custom Tabs ── */}
+      <div className="sidebar-tabs">
+        {TABS.map(({ id, label, Icon }) => (
+          <button
+            key={id}
+            className={`sidebar-tab-btn${activeTab === id ? ' active' : ''}`}
+            onClick={() => setActiveTab(id)}
+            title={label}
+            aria-current={activeTab === id ? 'page' : undefined}
+          >
+            <Icon />
+            <span>{label}</span>
+          </button>
+        ))}
+      </div>
 
-      <div className="flex-1 overflow-y-auto p-5 space-y-5">
+      {/* ── Tab Content ── */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 slide-in-left" key={activeTab}>
         {activeTab === 'header' && (
-          <TextosTab 
-            config={config} 
-            updateConfig={updateConfig} 
-            DEFAULT_CONFIG={DEFAULT_CONFIG} 
+          <TextosTab
+            config={config}
+            updateConfig={updateConfig}
+            DEFAULT_CONFIG={DEFAULT_CONFIG}
           />
         )}
 
         {activeTab === 'prizes' && (
-          <PremiosTab 
-            config={config} 
-            addPrize={addPrize} 
-            removePrize={removePrize} 
-            updatePrize={updatePrize} 
+          <PremiosTab
+            config={config}
+            addPrize={addPrize}
+            removePrize={removePrize}
+            updatePrize={updatePrize}
           />
         )}
 
         {activeTab === 'card' && (
-          <CartelaTab 
-            config={config} 
-            updateConfig={updateConfig} 
+          <CartelaTab
+            config={config}
+            updateConfig={updateConfig}
           />
         )}
 
         {activeTab === 'generation' && (
-          <ConfigTab 
-            startNum={startNum} 
-            setStartNum={setStartNum} 
-            quantity={quantity} 
-            setQuantity={setQuantity} 
+          <ConfigTab
+            startNum={startNum}
+            setStartNum={setStartNum}
+            quantity={quantity}
+            setQuantity={setQuantity}
           />
         )}
 
         {activeTab === 'logo' && (
-          <LogoTab 
-            config={config} 
-            updateConfig={updateConfig} 
-            logoData={logoData} 
-            handleImageUpload={handleImageUpload} 
-            resetLogo={resetLogo} 
-            centerLogoData={centerLogoData} 
-            handleCenterImageUpload={handleCenterImageUpload} 
-            resetCenterLogo={resetCenterLogo} 
-            sponsorsLogos={sponsorsLogos} 
-            handleSponsorsImageUpload={handleSponsorsImageUpload} 
-            removeSponsorsLogo={removeSponsorsLogo} 
+          <LogoTab
+            config={config}
+            updateConfig={updateConfig}
+            logoData={logoData}
+            handleImageUpload={handleImageUpload}
+            resetLogo={resetLogo}
+            centerLogoData={centerLogoData}
+            handleCenterImageUpload={handleCenterImageUpload}
+            resetCenterLogo={resetCenterLogo}
+            sponsorsLogos={sponsorsLogos}
+            handleSponsorsImageUpload={handleSponsorsImageUpload}
+            removeSponsorsLogo={removeSponsorsLogo}
             realizadoPorLogo={realizadoPorLogo}
             handleRealizadoPorImageUpload={handleRealizadoPorImageUpload}
             resetRealizadoPorLogo={resetRealizadoPorLogo}
@@ -119,20 +123,21 @@ function ConfigPanel({
         )}
 
         {activeTab === 'advanced' && (
-          <AvancadoTab 
-            config={config} 
-            updateConfig={updateConfig} 
-            DEFAULT_CONFIG={DEFAULT_CONFIG} 
-            resetAll={resetAll} 
+          <AvancadoTab
+            config={config}
+            updateConfig={updateConfig}
+            DEFAULT_CONFIG={DEFAULT_CONFIG}
+            resetAll={resetAll}
           />
         )}
       </div>
 
-      {/* Sidebar Footer */}
-      <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-[10px] text-slate-500 dark:text-slate-400 flex justify-between items-center transition-colors duration-200">
-        <span>Versão 2.0.0</span>
-        <span className="flex items-center font-medium">
-          <Heart className="w-3.5 h-3.5 text-red-500 mr-1 fill-red-500" /> Feito por Tauane Alessandra
+      {/* ── Sidebar Footer ── */}
+      <div className="px-4 py-3 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-950 text-[10px] text-slate-400 dark:text-slate-500 flex justify-between items-center transition-colors duration-200">
+        <span className="font-mono">v2.0.0</span>
+        <span className="flex items-center gap-1 font-medium">
+          <Heart className="w-3 h-3 text-rose-400 fill-rose-400" />
+          Feito por Tauane Alessandra
         </span>
       </div>
     </aside>

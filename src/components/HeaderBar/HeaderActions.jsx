@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { LayoutGrid, Search, Dice5, Printer, Sun, Moon } from 'lucide-react';
+import { LayoutGrid, Search, Dice5, Printer } from 'lucide-react';
 
 function HeaderActions({
   config,
@@ -10,72 +10,100 @@ function HeaderActions({
   setShowValidation,
   setShowDrawMode,
   setShowPrintModal,
-  darkMode,
-  setDarkMode,
 }) {
   const accentColor = config.accentColor || '#ffffff';
 
+  // Cor do botão Imprimir baseada no accentColor do usuário
+  const printBg =
+    accentColor === '#ffffff' ? '#1e293b' : accentColor;
+  const printColor =
+    accentColor === '#ffffff' ? '#ffffff' : '#1e1b4b';
+
+  // Botão Sorteador usa accentColor como destaque
+  const hasDiceAccent = accentColor !== '#ffffff';
+
   return (
-    <div className="flex items-center gap-2 flex-wrap">
-      {/* Dark mode toggle */}
-      <button
-        onClick={() => setDarkMode(d => !d)}
-        className="flex items-center justify-center p-2.5 rounded-lg text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white transition cursor-pointer"
-        title={darkMode ? 'Tema Claro' : 'Tema Escuro'}
-      >
-        {darkMode ? <Sun className="w-4 h-4 text-amber-500" /> : <Moon className="w-4 h-4" />}
-      </button>
+    <div className="flex items-center gap-1.5 flex-wrap">
+      {/* ── Grupo: utilitários ── */}
+      <div className="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl p-1">
 
-      {/* Thumbnails toggle */}
-      <button
-        onClick={() => setShowThumbnails(p => !p)}
-        className={`flex items-center gap-1.5 px-3 py-2.5 rounded-lg text-xs font-semibold transition border cursor-pointer ${
-          showThumbnails 
-            ? 'border-slate-800 text-slate-800 bg-slate-100 dark:border-white dark:text-white dark:bg-slate-800' 
-            : 'border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:border-slate-400 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800'
-        }`}
-      >
-        <LayoutGrid className="w-4 h-4" />
-        <span className="hidden sm:inline">Miniaturas</span>
-      </button>
 
-      {/* Validator */}
-      <button
-        onClick={() => setShowValidation(true)}
-        className="flex items-center gap-1.5 px-3 py-2.5 rounded-lg text-xs font-semibold transition border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:border-slate-400 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-850 cursor-pointer"
-      >
-        <Search className="w-4 h-4" />
-        <span className="hidden sm:inline">Conferir Cartela</span>
-      </button>
+        {/* Thumbnails toggle */}
+        <button
+          id="btn-thumbnails"
+          onClick={() => setShowThumbnails((p) => !p)}
+          className={`flex items-center gap-1.5 px-2.5 h-8 rounded-lg text-xs font-semibold transition cursor-pointer ${
+            showThumbnails
+              ? 'bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300'
+              : 'text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white'
+          }`}
+          title="Mostrar miniaturas de todas as cartelas"
+        >
+          <LayoutGrid className="w-3.5 h-3.5" />
+          <span className="hidden sm:inline">Miniaturas</span>
+        </button>
 
-      {/* Draw Mode */}
-      <button
-        onClick={() => setShowDrawMode(true)}
-        className={`flex items-center gap-1.5 px-3 py-2.5 rounded-lg text-xs font-bold transition border cursor-pointer ${
-          accentColor === '#ffffff' ? 'border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-850' : ''
-        }`}
-        style={accentColor !== '#ffffff' ? { 
-          background: accentColor + '15', 
-          color: accentColor, 
-          borderColor: accentColor + '33' 
-        } : undefined}
-      >
-        <Dice5 className="w-4 h-4" />
-        <span className="hidden sm:inline">Sorteador</span>
-      </button>
+        {/* Validator */}
+        <button
+          id="btn-validator"
+          onClick={() => setShowValidation(true)}
+          className="flex items-center gap-1.5 px-2.5 h-8 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition cursor-pointer"
+          title="Conferir se uma cartela é vencedora"
+        >
+          <Search className="w-3.5 h-3.5" />
+          <span className="hidden sm:inline">Conferir</span>
+        </button>
+      </div>
 
-      {/* Print */}
-      <button
-        onClick={() => setShowPrintModal(true)}
-        className="flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-bold transition shadow-sm cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
-        style={{ 
-          background: accentColor === '#ffffff' ? '#1e293b' : accentColor, 
-          color: accentColor === '#ffffff' ? '#ffffff' : '#1e1b4b' 
-        }}
-      >
-        <Printer className="w-4 h-4" />
-        <span>Imprimir ({quantity})</span>
-      </button>
+      {/* ── Grupo: ações principais ── */}
+      <div className="flex items-center gap-1.5">
+        {/* Draw Mode */}
+        <button
+          id="btn-sorteador"
+          onClick={() => setShowDrawMode(true)}
+          className={`flex items-center gap-1.5 px-3 h-9 rounded-xl text-xs font-bold transition border cursor-pointer ${
+            hasDiceAccent
+              ? ''
+              : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-600'
+          }`}
+          style={
+            hasDiceAccent
+              ? {
+                  background: accentColor + '18',
+                  color: accentColor,
+                  borderColor: accentColor + '40',
+                }
+              : undefined
+          }
+          title="Abrir sorteador de números"
+        >
+          <Dice5 className="w-4 h-4" />
+          <span className="hidden sm:inline">Sorteador</span>
+        </button>
+
+
+        {/* Print */}
+        <button
+          id="btn-print"
+          onClick={() => setShowPrintModal(true)}
+          className="flex items-center gap-2 px-4 h-9 rounded-xl text-sm font-bold transition shadow-sm cursor-pointer hover:scale-[1.02] hover:shadow-md active:scale-[0.98]"
+          style={{ background: printBg, color: printColor }}
+          title={`Imprimir ${quantity} cartela${quantity !== 1 ? 's' : ''}`}
+        >
+          <Printer className="w-4 h-4" />
+          <span>Imprimir</span>
+          <span
+            className="inline-flex items-center justify-center text-[10px] font-bold rounded-full w-5 h-5 leading-none"
+            style={{
+              background:
+                accentColor === '#ffffff' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.15)',
+              color: printColor,
+            }}
+          >
+            {quantity}
+          </span>
+        </button>
+      </div>
     </div>
   );
 }
@@ -88,8 +116,6 @@ HeaderActions.propTypes = {
   setShowValidation: PropTypes.func.isRequired,
   setShowDrawMode: PropTypes.func.isRequired,
   setShowPrintModal: PropTypes.func.isRequired,
-  darkMode: PropTypes.bool.isRequired,
-  setDarkMode: PropTypes.func.isRequired,
 };
 
 export default HeaderActions;

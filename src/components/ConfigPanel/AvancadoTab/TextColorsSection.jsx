@@ -31,7 +31,7 @@ function TextColorsSection({ config, updateConfig }) {
 
   return (
     <div 
-      className="flex flex-col gap-3 p-3.5 bg-slate-50 border border-slate-200 rounded-xl"
+      className="flex flex-col gap-3 p-3.5 bg-white border border-slate-200 rounded-xl"
       data-testid="text-colors-section"
     >
       <label className="text-xs text-slate-700 font-bold flex items-center gap-1" id="text-colors-title">

@@ -22,7 +22,7 @@ function MultiColorToggle({ config, updateConfig }) {
 
   return (
     <div 
-      className="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200 rounded-xl transition-all hover:bg-slate-100/50"
+      className="flex items-center justify-between p-3.5 bg-white border border-slate-200 rounded-xl transition-all hover:bg-slate-100/50"
       data-testid="multi-color-toggle-container"
     >
       <div className="flex flex-col pr-2">

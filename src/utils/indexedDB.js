@@ -1,6 +1,9 @@
+import { logError } from './logger.js';
+
 const DB_NAME = 'bringo-db';
 const STORE_NAME = 'images';
 const DB_VERSION = 1;
+const MODULE = 'IndexedDB';
 
 function openDB() {
   return new Promise((resolve, reject) => {
@@ -35,7 +38,7 @@ export async function getImage(key) {
       request.onerror = () => reject(request.error);
     });
   } catch (error) {
-    console.error('Failed to get image from IndexedDB:', error);
+    logError(MODULE, `Failed to get image for key: "${key}"`, error);
     return null;
   }
 }
@@ -52,7 +55,7 @@ export async function setImage(key, value) {
       request.onerror = () => reject(request.error);
     });
   } catch (error) {
-    console.error('Failed to set image in IndexedDB:', error);
+    logError(MODULE, `Failed to set image for key: "${key}"`, error);
   }
 }
 
@@ -68,7 +71,7 @@ export async function deleteImage(key) {
       request.onerror = () => reject(request.error);
     });
   } catch (error) {
-    console.error('Failed to delete image from IndexedDB:', error);
+    logError(MODULE, `Failed to delete image for key: "${key}"`, error);
   }
 }
 
@@ -84,6 +87,6 @@ export async function clearImages() {
       request.onerror = () => reject(request.error);
     });
   } catch (error) {
-    console.error('Failed to clear IndexedDB:', error);
+    logError(MODULE, 'Failed to clear all images from IndexedDB', error);
   }
 }

@@ -118,3 +118,72 @@ O sistema foi otimizado para lidar com grandes volumes de dados (lotes de até 2
     *   Altere o layout para **Paisagem**.
     *   Em configurações avançadas, defina as **Margens** como **Nenhuma** para garantir que as duas cartelas se encaixem perfeitamente em uma única página A4.
     *   Certifique-se de que a opção **Gráficos de segundo plano** (Background graphics) esteja **marcada** para que as cores temáticas e logos apareçam corretamente.
+
+---
+
+## 🏗️ Arquitetura do Frontend
+
+```mermaid
+flowchart TD
+    main["main.jsx\n(Entry Point)"]
+    EB["ErrorBoundary\n(Captura erros de render)"]
+    App["App.jsx\n(Orquestrador de estado)"]
+
+    subgraph hooks["Hooks (Lógica de Estado)"]
+        H1["useBingoConfig\n(Configuração + localStorage)"]
+        H2["useImageUploads\n(Imagens + IndexedDB)"]
+    end
+
+    subgraph utils["Utils (Lógica Pura)"]
+        U1["bingo.js\n(Geração de cartelas)"]
+        U2["random.js\n(RNG Mulberry32)"]
+        U3["colorUtils.js\n(Paleta de cores)"]
+        U4["indexedDB.js\n(Persistência de imagens)"]
+        U5["logger.js\n(Logs estruturados)"]
+        U6["useDebounce.js\n(Debounce de I/O)"]
+    end
+
+    subgraph components["Components (UI)"]
+        C1["HeaderBar"]
+        C2["ConfigPanel"]
+        C3["PreviewArea + CardThumbnails"]
+        C4["CartelaCard + BingoGrid"]
+        C5["PrintContainer\n(Lazy batch rendering)"]
+        C6["DrawMode\n(Sorteador)"]
+        C7["ValidationMode\n(Validador)"]
+        C8["PrintModal"]
+    end
+
+    subgraph storage["Persistência"]
+        LS["localStorage\n(Configuração)"]
+        IDB["IndexedDB\n(Imagens base64)"]
+    end
+
+    main --> EB --> App
+    App --> H1 & H2
+    H1 --> U6 --> LS
+    H2 --> U4 --> IDB
+    U4 --> U5
+    App --> C1 & C2 & C3 & C5 & C6 & C7 & C8
+    C3 --> C4
+    C5 --> C4
+    C4 --> U1 --> U2
+    C4 --> U3
+    EB --> U5
+```
+
+---
+
+## 🧪 Testes
+
+```bash
+# Rodar todos os testes
+npm run test
+
+# Rodar em modo watch (desenvolvimento)
+npm run test:watch
+
+# Rodar com relatório de cobertura (mín. 70%)
+npm run test:coverage
+```
+

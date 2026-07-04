@@ -47,7 +47,7 @@ export const TITLE_PRESETS = {
 
 function TitleStyleEditor({ config, updateConfig }) {
   return (
-    <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-3 mt-1.5 mb-3">
+    <div className="p-3 bg-white rounded-xl border border-slate-200 space-y-3 mt-1.5 mb-3">
       <div className="flex items-center justify-between">
         <span className="text-xs font-bold text-slate-700 flex items-center gap-1">
           🎨 Estilo do Título

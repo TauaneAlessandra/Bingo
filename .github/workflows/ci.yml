@@ -7,20 +7,57 @@ on:
     branches: [ main, master ]
 
 jobs:
-  frontend-test:
+  frontend-ci:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: 'npm'
+
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --legacy-peer-deps
+
+      - name: Lint check
+        run: npm run lint
+
+      - name: Run tests with coverage
+        run: npm run test:coverage
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 7
+
       - name: Build check
         run: npm run build
-      - name: Run tests
-        run: npm run test
+
+      - name: Notify failure summary
+        if: failure()
+        run: |
+          echo "## ❌ CI Failed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Step | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Install | Check logs above |" >> $GITHUB_STEP_SUMMARY
+          echo "| Lint | Check logs above |" >> $GITHUB_STEP_SUMMARY
+          echo "| Tests / Coverage | Check logs above |" >> $GITHUB_STEP_SUMMARY
+          echo "| Build | Check logs above |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "> Abra o job acima para ver o erro específico." >> $GITHUB_STEP_SUMMARY
+
+      - name: Notify success summary
+        if: success()
+        run: |
+          echo "## ✅ CI Passed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Lint, testes, cobertura e build concluídos com sucesso." >> $GITHUB_STEP_SUMMARY
+
 
 

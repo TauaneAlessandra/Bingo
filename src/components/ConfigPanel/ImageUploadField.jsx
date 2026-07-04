@@ -13,7 +13,7 @@ function ImageUploadField({
   imageSizeClass = 'w-24 h-24',
 }) {
   return (
-    <div className="flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-xl p-6 bg-slate-50 gap-4">
+    <div className="flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-xl p-6 bg-white gap-4">
       {imageData ? (
         <div className="flex flex-col items-center gap-3">
           <img

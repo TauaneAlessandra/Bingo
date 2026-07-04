@@ -11,7 +11,7 @@ function StyleEditor({ fieldKey, label, config, updateConfig }) {
   const sizeValue = config[sizeKey] || '';
 
   return (
-    <div className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl mb-3 mt-1">
+    <div className="px-3 py-2 bg-white border border-slate-200 rounded-xl mb-3 mt-1">
       <button 
         type="button" 
         onClick={() => setIsOpen(!isOpen)}

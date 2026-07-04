@@ -111,7 +111,7 @@ function LogoTab({
           onInput={(e) => updateConfig({ sponsorsTitle: e.target.value.toUpperCase() })}
         />
 
-        <div className="flex flex-col gap-4 border border-slate-200 rounded-xl p-4 bg-slate-50">
+        <div className="flex flex-col gap-4 border border-slate-200 rounded-xl p-4 bg-white">
           {sponsorsLogos && sponsorsLogos.length > 0 ? (
             <div className="grid grid-cols-3 gap-2">
               {sponsorsLogos.map((logo, idx) => (

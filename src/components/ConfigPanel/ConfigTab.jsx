@@ -32,7 +32,7 @@ function ConfigTab({ startNum, setStartNum, quantity, setQuantity }) {
         </div>
       )}
 
-      <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+      <div className="p-4 bg-white rounded-xl border border-slate-200 space-y-2">
         <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1">
           <Info className="w-3.5 h-3.5 text-amber-500" /> Dica de Impressão
         </h4>

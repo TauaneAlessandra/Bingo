@@ -83,7 +83,7 @@ function PreviewArea({
   const isFallback = backendOnline && (!backendCards || backendCards.length < quantity);
 
   return (
-    <main className="no-print flex-1 bg-[#f1f5f9] flex flex-col relative overflow-hidden">
+    <main className="no-print flex-1 preview-area-bg flex flex-col relative overflow-hidden">
       {isFallback && (
         <div className="bg-amber-50 border-b border-amber-200 px-4 py-2.5 text-xs text-amber-800 flex justify-between items-center shrink-0 font-sans shadow-sm">
           <span>Aviso: Modo Online ativado, mas as cartelas geradas ainda não foram carregadas. Exibindo visualização local temporária.</span>
