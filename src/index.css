@@ -152,7 +152,6 @@ body {
     height: 100% !important;
     min-height: unset !important;
     box-shadow: none !important;
-    border: 2px solid black !important;
     box-sizing: border-box !important;
   }
 }

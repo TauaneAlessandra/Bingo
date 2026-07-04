@@ -51,9 +51,9 @@ function ConfigPanel({
   }, []);
 
   return (
-    <aside className="no-print w-[400px] bg-white border-r border-slate-200 flex flex-col shrink-0">
+    <aside className="no-print w-[400px] bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col shrink-0 transition-colors duration-200">
       {/* Material Web Tabs */}
-      <md-tabs ref={tabsRef} active-index="0" className="border-b border-slate-200">
+      <md-tabs ref={tabsRef} active-index="0" className="border-b border-slate-200 dark:border-slate-800">
         <md-secondary-tab inline-icon>Textos</md-secondary-tab>
         <md-secondary-tab inline-icon>Prêmios</md-secondary-tab>
         <md-secondary-tab inline-icon>Cartela</md-secondary-tab>
@@ -129,7 +129,7 @@ function ConfigPanel({
       </div>
 
       {/* Sidebar Footer */}
-      <div className="p-4 border-t border-slate-200 bg-slate-50 text-[10px] text-slate-500 flex justify-between items-center">
+      <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-[10px] text-slate-500 dark:text-slate-400 flex justify-between items-center transition-colors duration-200">
         <span>Versão 2.0.0</span>
         <span className="flex items-center font-medium">
           <Heart className="w-3.5 h-3.5 text-red-500 mr-1 fill-red-500" /> Feito por Tauane Alessandra

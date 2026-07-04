@@ -1,5 +1,6 @@
 import React from 'react';
-import { Shuffle, RotateCcw } from 'lucide-react';
+import PropTypes from 'prop-types';
+import { Shuffle, RotateCcw, Volume2, VolumeX, FileText } from 'lucide-react';
 
 export default function DrawControls({
   drawNext,
@@ -10,7 +11,11 @@ export default function DrawControls({
   setAutoPlay,
   autoInterval,
   setAutoIntervalState,
-  accentColor
+  accentColor,
+  isMuted,
+  setIsMuted,
+  calledCount,
+  onCopyReport,
 }) {
   return (
     <div className="flex flex-col gap-3 w-full">
@@ -52,13 +57,50 @@ export default function DrawControls({
         </div>
       </div>
 
-      <button
-        onClick={reset}
-        className="w-full py-2.5 rounded-xl font-semibold text-sm border border-[#2c2c3e] text-slate-400 hover:text-white hover:border-slate-500 transition flex items-center justify-center gap-2"
-      >
-        <RotateCcw className="w-4 h-4" />
-        Reiniciar
-      </button>
+      {/* Symmetrical Audio and Reset controls */}
+      <div className="flex gap-2 w-full">
+        <button
+          onClick={() => setIsMuted(m => !m)}
+          className="flex-1 py-2.5 rounded-xl font-semibold text-sm border border-[#2c2c3e] text-slate-400 hover:text-white hover:border-slate-500 transition flex items-center justify-center gap-2"
+        >
+          {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+          {isMuted ? 'Mudo' : 'Som'}
+        </button>
+        <button
+          onClick={reset}
+          className="flex-1 py-2.5 rounded-xl font-semibold text-sm border border-[#2c2c3e] text-slate-400 hover:text-white hover:border-slate-500 transition flex items-center justify-center gap-2"
+        >
+          <RotateCcw className="w-4 h-4" />
+          Reiniciar
+        </button>
+      </div>
+
+      {/* Copy Report Button */}
+      {calledCount > 0 && (
+        <button
+          onClick={onCopyReport}
+          className="w-full py-2.5 rounded-xl font-semibold text-xs bg-indigo-600 hover:bg-indigo-500 text-white transition flex items-center justify-center gap-2 cursor-pointer shadow-md"
+        >
+          <FileText className="w-4 h-4" />
+          Copiar Relatório do Sorteio
+        </button>
+      )}
     </div>
   );
 }
+
+DrawControls.propTypes = {
+  drawNext: PropTypes.func.isRequired,
+  reset: PropTypes.func.isRequired,
+  deckLength: PropTypes.number.isRequired,
+  isAnimating: PropTypes.bool.isRequired,
+  autoPlay: PropTypes.bool.isRequired,
+  setAutoPlay: PropTypes.func.isRequired,
+  autoInterval: PropTypes.number.isRequired,
+  setAutoIntervalState: PropTypes.func.isRequired,
+  accentColor: PropTypes.string,
+  isMuted: PropTypes.bool.isRequired,
+  setIsMuted: PropTypes.func.isRequired,
+  calledCount: PropTypes.number.isRequired,
+  onCopyReport: PropTypes.func.isRequired,
+};

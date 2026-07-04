@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { generateBingoNumbers } from '../../utils/bingo';
 import ValidationHeader from './ValidationHeader';
@@ -39,9 +39,31 @@ export default function ValidationMode({
     return new Set(cleanNumbers);
   }, [drawnInput, numberRange]);
 
+  const handleToggleNumber = useCallback((num) => {
+    setSubmitted(false);
+    setDrawnInput(prev => {
+      const clean = prev.split(/[\s,;]+/)
+        .map(s => parseInt(s.trim(), 10))
+        .filter(n => !isNaN(n) && n >= 1 && n <= numberRange);
+
+      const index = clean.indexOf(num);
+      if (index > -1) {
+        clean.splice(index, 1);
+      } else {
+        clean.push(num);
+      }
+      clean.sort((a, b) => a - b);
+      return clean.join(', ');
+    });
+  }, [numberRange]);
+
+  const handleClearNumbers = useCallback(() => {
+    setSubmitted(false);
+    setDrawnInput('');
+  }, []);
+
   const grids = useMemo(() => {
     if (!isValidCard) return null;
-    // Fallback local generation if offline or error loading
     return generateBingoNumbers(cardNum, numberRange);
   }, [cardNum, isValidCard, numberRange]);
 
@@ -51,7 +73,7 @@ export default function ValidationMode({
   }, [grids, drawnNumbers]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-fade-in">
       <div className="bg-[#12121a] border border-[#2c2c3e] rounded-2xl w-full max-w-3xl max-h-[96vh] flex flex-col shadow-2xl overflow-hidden">
         
         <ValidationHeader onClose={onClose} accentColor={accentColor} />
@@ -65,6 +87,10 @@ export default function ValidationMode({
             setSubmitted={setSubmitted}
             isValidCard={isValidCard}
             accentColor={accentColor}
+            drawnNumbers={drawnNumbers}
+            numberRange={numberRange}
+            onToggleNumber={handleToggleNumber}
+            onClearNumbers={handleClearNumbers}
           />
 
           {submitted && isValidCard && grids && (

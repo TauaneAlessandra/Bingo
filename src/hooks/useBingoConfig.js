@@ -54,6 +54,11 @@ export const DEFAULT_CONFIG = {
   gridBackgroundStyle: 'soft',
   gridNumberSize: '18px',
   gridLabelSize: '11px',
+  cardBorderSize: '2px',
+  cardBorderStyle: 'solid',
+  cardBorderColor: '#000000',
+  cardBorderRadius: '0px',
+  cardBackgroundPattern: 'none',
 };
 
 function loadConfig() {

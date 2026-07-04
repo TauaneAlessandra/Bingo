@@ -17,9 +17,9 @@ function Brand({ accentColor }) {
       </div>
       <div>
         <div className="flex items-center gap-2">
-          <h1 className="font-outfit font-bold text-xl text-slate-800 tracking-wide">Bringo</h1>
+          <h1 className="font-outfit font-bold text-xl text-slate-800 dark:text-white tracking-wide">Bringo</h1>
         </div>
-        <p className="text-xs text-slate-500">Gerador Premium de Cartelas de Bingo</p>
+        <p className="text-xs text-slate-500 dark:text-slate-400">Gerador Premium de Cartelas de Bingo</p>
       </div>
     </div>
   );

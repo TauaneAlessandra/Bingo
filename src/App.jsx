@@ -44,6 +44,26 @@ function App() {
   const [quantity, setQuantity] = useState(10);
   const [previewIndex, setPreviewIndex] = useState(0);
   const [zoom, setZoom] = useState(100);
+  const [darkMode, setDarkMode] = useState(() => {
+    try {
+      return localStorage.getItem('bringo-theme') === 'dark';
+    } catch {
+      return false;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('bringo-theme', darkMode ? 'dark' : 'light');
+      if (darkMode) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    } catch {
+      // ignore
+    }
+  }, [darkMode]);
 
   // Modal states
   const [showDrawMode, setShowDrawMode] = useState(false);
@@ -99,7 +119,7 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col font-roboto text-slate-800 bg-[#f8fafc]">
+    <div className={`min-h-screen flex flex-col font-roboto text-slate-800 bg-[#f8fafc] dark:bg-slate-950 dark:text-slate-100 transition-colors duration-250 ${darkMode ? 'dark' : ''}`}>
       {/* Header Bar */}
       <HeaderBar
         config={config}
@@ -109,6 +129,8 @@ function App() {
         setShowValidation={setShowValidation}
         setShowDrawMode={setShowDrawMode}
         setShowPrintModal={setShowPrintModal}
+        darkMode={darkMode}
+        setDarkMode={setDarkMode}
       />
 
       {/* Main Content */}

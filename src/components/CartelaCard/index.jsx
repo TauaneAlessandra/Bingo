@@ -46,8 +46,37 @@ const CartelaCard = memo(({ number, config, logoData, sponsorsLogoData, centerLo
     config.gridBackgroundStyle
   ]);
 
+  let backgroundImage = undefined;
+  let backgroundSize = undefined;
+  const pattern = config.cardBackgroundPattern || 'none';
+
+  if (pattern === 'dots') {
+    backgroundImage = 'radial-gradient(rgba(0, 0, 0, 0.035) 1.5px, transparent 1.5px)';
+    backgroundSize = '14px 14px';
+  } else if (pattern === 'stripes') {
+    backgroundImage = 'linear-gradient(45deg, rgba(0, 0, 0, 0.015) 25%, transparent 25%, transparent 50%, rgba(0, 0, 0, 0.015) 50%, rgba(0, 0, 0, 0.015) 75%, transparent 75%, transparent)';
+    backgroundSize = '18px 18px';
+  } else if (pattern === 'grid') {
+    backgroundImage = 'linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px)';
+    backgroundSize = '18px 18px';
+  } else if (pattern === 'waves') {
+    backgroundImage = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='40' viewBox='0 0 80 40'%3E%3Cpath d='M0 40a19.96 19.96 0 0 1 20-20 19.96 19.96 0 0 1 20 20H0zm80 0a19.96 19.96 0 0 1-20-20 19.96 19.96 0 0 1-20 20h40zM0 0a19.96 19.96 0 0 1 20 20A19.96 19.96 0 0 1 40 0H0zm80 0a19.96 19.96 0 0 1-20 20A19.96 19.96 0 0 1 40 0h40zM40 20a19.96 19.96 0 0 1 20-20 19.96 19.96 0 0 1 20 20H40zm0 0a19.96 19.96 0 0 1-20 20 19.96 19.96 0 0 1-20-20h40z' fill='%23000000' fill-opacity='0.02' fill-rule='evenodd'/%3E%3C/svg%3E")`;
+  }
+
+  const cardStyle = {
+    borderWidth: config.cardBorderSize || '2px',
+    borderStyle: config.cardBorderStyle || 'solid',
+    borderColor: config.cardBorderColor || '#000000',
+    borderRadius: config.cardBorderRadius || '0px',
+    backgroundImage,
+    backgroundSize,
+  };
+
   return (
-    <div className="preview-card flex flex-col p-4 print:p-2.5 font-sans select-none border-2 border-black">
+    <div
+      className="preview-card flex flex-col p-4 print:p-2.5 font-sans select-none"
+      style={cardStyle}
+    >
       {/* Header Section */}
       <CardHeader
         config={config}

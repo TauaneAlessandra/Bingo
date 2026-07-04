@@ -11,11 +11,13 @@ function HeaderBar({
   setShowValidation,
   setShowDrawMode,
   setShowPrintModal,
+  darkMode,
+  setDarkMode,
 }) {
   const accentColor = config.accentColor || '#ffffff';
 
   return (
-    <header className="no-print bg-white border-b border-slate-200 px-5 py-3.5 flex items-center justify-between shadow-sm gap-3 flex-wrap">
+    <header className="no-print bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-5 py-3.5 flex items-center justify-between shadow-sm gap-3 flex-wrap transition-colors duration-200">
       <Brand accentColor={accentColor} />
 
       <HeaderActions
@@ -26,6 +28,8 @@ function HeaderBar({
         setShowValidation={setShowValidation}
         setShowDrawMode={setShowDrawMode}
         setShowPrintModal={setShowPrintModal}
+        darkMode={darkMode}
+        setDarkMode={setDarkMode}
       />
     </header>
   );
@@ -39,7 +43,8 @@ HeaderBar.propTypes = {
   setShowValidation: PropTypes.func.isRequired,
   setShowDrawMode: PropTypes.func.isRequired,
   setShowPrintModal: PropTypes.func.isRequired,
+  darkMode: PropTypes.bool.isRequired,
+  setDarkMode: PropTypes.func.isRequired,
 };
 
 export default HeaderBar;
-
