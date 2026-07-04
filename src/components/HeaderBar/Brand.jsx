@@ -1,7 +1,8 @@
 import React from 'react';
-import { Ticket, Database } from 'lucide-react';
+import PropTypes from 'prop-types';
+import { Ticket } from 'lucide-react';
 
-function Brand({ accentColor, backendOnline }) {
+function Brand({ accentColor }) {
   return (
     <div className="flex items-center space-x-3">
       <div 
@@ -17,16 +18,15 @@ function Brand({ accentColor, backendOnline }) {
       <div>
         <div className="flex items-center gap-2">
           <h1 className="font-outfit font-bold text-xl text-slate-800 tracking-wide">Bringo</h1>
-          {backendOnline && (
-            <span className="flex items-center gap-0.5 text-[9px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-md border border-emerald-200" title="Banco SQLite Conectado">
-              <Database className="w-2.5 h-2.5" /> SQL
-            </span>
-          )}
         </div>
         <p className="text-xs text-slate-500">Gerador Premium de Cartelas de Bingo</p>
       </div>
     </div>
   );
 }
+
+Brand.propTypes = {
+  accentColor: PropTypes.string.isRequired,
+};
 
 export default Brand;

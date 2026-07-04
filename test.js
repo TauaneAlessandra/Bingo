@@ -2,6 +2,7 @@ import assert from 'node:assert';
 import test from 'node:test';
 import { getColumnRanges, generateGrid, generateBingoNumbers } from './src/utils/bingo.js';
 import { mulberry32 } from './src/utils/random.js';
+import { checkGridWin } from './src/components/ValidationMode/utils.js';
 
 test('getColumnRanges - default 75', () => {
   const ranges = getColumnRanges(75);
@@ -103,4 +104,39 @@ test('generateGrid - Structure and Constraints for 90 Numbers', () => {
   grid.G.forEach(n => assert.ok(n >= 55 && n <= 72));
   grid.O.forEach(n => assert.ok(n >= 73 && n <= 90));
 });
+
+test('checkGridWin - Detection Logic', () => {
+  // Setup a sample grid configuration
+  const grid = {
+    B: [1, 2, 3, 4, 5],
+    I: [16, 17, 18, 19, 20],
+    N: [31, 32, 'FREE', 34, 35],
+    G: [46, 47, 48, 49, 50],
+    O: [61, 62, 63, 64, 65]
+  };
+
+  // Case 1: Empty Set of drawn numbers (No Win)
+  assert.strictEqual(checkGridWin(grid, new Set()), false);
+
+  // Case 2: Row Win (Row index 0: 1, 16, 31, 46, 61)
+  const rowWinSet = new Set([1, 16, 31, 46, 61]);
+  assert.strictEqual(checkGridWin(grid, rowWinSet), true);
+
+  // Case 3: Column Win (Column B: 1, 2, 3, 4, 5)
+  const colWinSet = new Set([1, 2, 3, 4, 5]);
+  assert.strictEqual(checkGridWin(grid, colWinSet), true);
+
+  // Case 4: Main Diagonal Win (1, 17, 'FREE', 49, 65)
+  const mainDiagWinSet = new Set([1, 17, 49, 65]); // FREE cell is matching implicitly
+  assert.strictEqual(checkGridWin(grid, mainDiagWinSet), true);
+
+  // Case 5: Anti-Diagonal Win (5, 19, 'FREE', 47, 61)
+  const antiDiagWinSet = new Set([5, 19, 47, 61]);
+  assert.strictEqual(checkGridWin(grid, antiDiagWinSet), true);
+
+  // Case 6: Partial Row (Missing one number)
+  const partialRowSet = new Set([1, 16, 31, 46]);
+  assert.strictEqual(checkGridWin(grid, partialRowSet), false);
+});
+
 

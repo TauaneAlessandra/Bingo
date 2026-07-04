@@ -1,45 +1,54 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
+import PropTypes from 'prop-types';
 import { generateBingoNumbers } from '../../utils/bingo';
 import ValidationHeader from './ValidationHeader';
 import ValidationInputs from './ValidationInputs';
 import ValidationResults from './ValidationResults';
 import { checkGridWin } from './utils';
 
-export default function ValidationMode({ onClose, numberRange = 75, accentColor = '#f59e0b', prizes = [] }) {
+/**
+ * ValidationMode modal overlay lets users dynamically check whether
+ * a specific card won given the set of drawn numbers.
+ *
+ * @component
+ * @param {Object} props
+ * @param {() => void} props.onClose - Callback invoked when the modal is closed.
+ * @param {number} [props.numberRange=75] - The maximum number range for the bingo session (e.g., 75 or 90).
+ * @param {string} [props.accentColor='#f59e0b'] - Primary theme highlight color.
+ * @param {Array<string>} [props.prizes=[]] - Names/labels of the prizes.
+ */
+export default function ValidationMode({
+  onClose,
+  numberRange = 75,
+  accentColor = '#f59e0b',
+  prizes = []
+}) {
   const [cardNumber, setCardNumber] = useState('');
   const [drawnInput, setDrawnInput] = useState('');
   const [submitted, setSubmitted] = useState(false);
-  const [backendGrids, setBackendGrids] = useState(null);
-  const [loadingBackend, setLoadingBackend] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
 
-  const cardNum = parseInt(cardNumber);
+  const cardNum = parseInt(cardNumber, 10);
   const isValidCard = !isNaN(cardNum) && cardNum > 0;
 
-  // Parse drawn numbers from comma/space separated input
+  // Parse drawn numbers from comma/space/semicolon separated input
   const drawnNumbers = useMemo(() => {
     if (!drawnInput) return new Set();
-    return new Set(
-      drawnInput.split(/[\s,;]+/)
-        .map(s => parseInt(s.trim()))
-        .filter(n => !isNaN(n) && n >= 1 && n <= numberRange)
-    );
+    const cleanNumbers = drawnInput.split(/[\s,;]+/)
+      .map(s => parseInt(s.trim(), 10))
+      .filter(n => !isNaN(n) && n >= 1 && n <= numberRange);
+    return new Set(cleanNumbers);
   }, [drawnInput, numberRange]);
-
-  // Load card from backend is disabled
-  useEffect(() => {
-    setBackendGrids(null);
-    setErrorMsg('');
-  }, [cardNum, isValidCard, submitted]);
 
   const grids = useMemo(() => {
     if (!isValidCard) return null;
-    if (backendGrids) return backendGrids;
     // Fallback local generation if offline or error loading
     return generateBingoNumbers(cardNum, numberRange);
-  }, [cardNum, isValidCard, numberRange, backendGrids]);
+  }, [cardNum, isValidCard, numberRange]);
 
-  const gridResults = grids ? grids.map(g => checkGridWin(g, drawnNumbers)) : [];
+  const gridResults = useMemo(() => {
+    if (!grids) return [];
+    return grids.map(g => checkGridWin(g, drawnNumbers));
+  }, [grids, drawnNumbers]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
@@ -58,22 +67,7 @@ export default function ValidationMode({ onClose, numberRange = 75, accentColor 
             accentColor={accentColor}
           />
 
-          {loadingBackend && (
-            <div className="text-center py-4 text-slate-400 text-xs animate-pulse">
-              Buscando cartela #{cardNum} no banco de dados SQLite...
-            </div>
-          )}
-
-          {errorMsg && (
-            <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-xs text-red-400 font-semibold text-center">
-              {errorMsg}
-              <p className="text-[10px] text-slate-500 font-normal mt-1">
-                Aviso: Exibindo a cartela gerada localmente ( seeded ) como alternativa.
-              </p>
-            </div>
-          )}
-
-          {submitted && isValidCard && grids && !loadingBackend && (
+          {submitted && isValidCard && grids && (
             <ValidationResults
               cardNum={cardNum}
               drawnNumbers={drawnNumbers}
@@ -87,3 +81,10 @@ export default function ValidationMode({ onClose, numberRange = 75, accentColor 
     </div>
   );
 }
+
+ValidationMode.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  numberRange: PropTypes.number,
+  accentColor: PropTypes.string,
+  prizes: PropTypes.arrayOf(PropTypes.string),
+};

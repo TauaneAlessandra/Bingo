@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import BingoGrid from '../BingoGrid';
+import { BingoGrid } from '..';
 
 const PrizeGrid = memo(({
   prizeLabel,

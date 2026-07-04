@@ -1,6 +1,5 @@
 import React from 'react';
-import CartelaCard from '../CartelaCard';
-import CardThumbnails from '../CardThumbnails';
+import { CartelaCard, CardThumbnails } from '..';
 import PreviewToolbar from './PreviewToolbar';
 
 const CardSkeleton = () => (

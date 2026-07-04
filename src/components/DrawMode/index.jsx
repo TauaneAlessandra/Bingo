@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { X } from 'lucide-react';
 import { COLS } from './constants';
 import { getColumnForNumber, buildPool, shuffleArray } from './helpers';
@@ -126,3 +127,10 @@ export default function DrawMode({ onClose, numberRange = 75, accentColor = '#f5
     </div>
   );
 }
+
+DrawMode.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  numberRange: PropTypes.number,
+  accentColor: PropTypes.string,
+};
+

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
 import { Heart } from 'lucide-react';
 import TextosTab from './TextosTab';
 import PremiosTab from './PremiosTab';
@@ -34,7 +35,6 @@ function ConfigPanel({
   removePrize,
   updatePrize,
   resetAll,
-  refreshCards,
 }) {
   const [activeTab, setActiveTab] = useState('header');
   const tabsRef = useRef(null);
@@ -138,5 +138,34 @@ function ConfigPanel({
     </aside>
   );
 }
+
+ConfigPanel.propTypes = {
+  config: PropTypes.object.isRequired,
+  updateConfig: PropTypes.func.isRequired,
+  DEFAULT_CONFIG: PropTypes.object.isRequired,
+  startNum: PropTypes.number.isRequired,
+  setStartNum: PropTypes.func.isRequired,
+  quantity: PropTypes.number.isRequired,
+  setQuantity: PropTypes.func.isRequired,
+  logoData: PropTypes.string,
+  handleImageUpload: PropTypes.func.isRequired,
+  resetLogo: PropTypes.func.isRequired,
+  centerLogoData: PropTypes.string,
+  handleCenterImageUpload: PropTypes.func.isRequired,
+  resetCenterLogo: PropTypes.func.isRequired,
+  sponsorsLogos: PropTypes.arrayOf(PropTypes.string).isRequired,
+  handleSponsorsImageUpload: PropTypes.func.isRequired,
+  removeSponsorsLogo: PropTypes.func.isRequired,
+  realizadoPorLogo: PropTypes.string,
+  handleRealizadoPorImageUpload: PropTypes.func.isRequired,
+  resetRealizadoPorLogo: PropTypes.func.isRequired,
+  qrCodeLogo: PropTypes.string,
+  handleQrCodeImageUpload: PropTypes.func.isRequired,
+  resetQrCodeLogo: PropTypes.func.isRequired,
+  addPrize: PropTypes.func.isRequired,
+  removePrize: PropTypes.func.isRequired,
+  updatePrize: PropTypes.func.isRequired,
+  resetAll: PropTypes.func.isRequired,
+};
 
 export default ConfigPanel;

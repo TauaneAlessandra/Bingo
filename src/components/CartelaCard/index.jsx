@@ -1,4 +1,5 @@
 import React, { useMemo, memo } from 'react';
+import PropTypes from 'prop-types';
 import CardHeader from './CardHeader';
 import PrizeGridsContainer from './PrizeGridsContainer';
 import SponsorsSection from './SponsorsSection';
@@ -84,5 +85,17 @@ const CartelaCard = memo(({ number, config, logoData, sponsorsLogoData, centerLo
 });
 
 CartelaCard.displayName = 'CartelaCard';
+
+CartelaCard.propTypes = {
+  number: PropTypes.number.isRequired,
+  config: PropTypes.object.isRequired,
+  logoData: PropTypes.string,
+  sponsorsLogoData: PropTypes.string,
+  centerLogoData: PropTypes.string,
+  sponsorsLogos: PropTypes.arrayOf(PropTypes.string),
+  realizadoPorLogo: PropTypes.string,
+  qrCodeLogo: PropTypes.string,
+  grids: PropTypes.arrayOf(PropTypes.object),
+};
 
 export default CartelaCard;

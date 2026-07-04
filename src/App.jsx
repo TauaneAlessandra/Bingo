@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import HeaderBar from './components/HeaderBar';
-import ConfigPanel from './components/ConfigPanel';
-import PreviewArea from './components/PreviewArea';
-import PrintContainer from './components/PrintContainer';
-import DrawMode from './components/DrawMode';
-import ValidationMode from './components/ValidationMode';
-import PrintModal from './components/PrintModal';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import {
+  HeaderBar,
+  ConfigPanel,
+  PreviewArea,
+  PrintContainer,
+  DrawMode,
+  ValidationMode,
+  PrintModal,
+} from './components';
 import { useBingoConfig, DEFAULT_CONFIG } from './hooks/useBingoConfig';
 import { useImageUploads } from './hooks/useImageUploads';
 
@@ -35,6 +37,7 @@ function App() {
     resetRealizadoPorLogo,
     handleQrCodeImageUpload,
     resetQrCodeLogo,
+    clearAllImages,
   } = useImageUploads();
 
   const [startNum, setStartNum] = useState(1);
@@ -48,46 +51,30 @@ function App() {
   const [showPrintModal, setShowPrintModal] = useState(false);
   const [showThumbnails, setShowThumbnails] = useState(false);
 
-  // Backend states (disabled)
-  const backendOnline = false;
-  const backendCards = [];
-  const loadingCards = false;
-
   // Print states — lazy rendering
   const [printReady, setPrintReady] = useState(false);
   const [printProgress, setPrintProgress] = useState(0);
 
-  const refreshBackendCards = useCallback(async (currentStart = startNum, currentQty = quantity) => {
-    // No-op since backend is disabled
-  }, []);
+  // Reset both configurations (localStorage) and images (IndexedDB)
+  const handleResetAll = useCallback(() => {
+    resetAll();
+    clearAllImages();
+  }, [resetAll, clearAllImages]);
 
   // ── Reset previewIndex when quantity changes ──
   useEffect(() => {
     setPreviewIndex(prev => Math.min(prev, quantity - 1));
   }, [quantity]);
 
-  // ── Fetch cards when range changes ──
-  useEffect(() => {
-    refreshBackendCards(startNum, quantity);
-  }, [startNum, quantity, refreshBackendCards]);
-
   // ── Card Numbers / Objects Pairing (MEMOIZED) ──
-  const useBackendData = backendOnline && backendCards.length === quantity;
-
   const pairedCards = useMemo(() => {
     const pairs = [];
-    if (useBackendData) {
-      for (let i = 0; i < backendCards.length; i += 2) {
-        pairs.push([backendCards[i], backendCards[i + 1] || null]);
-      }
-    } else {
-      const endNum = startNum + quantity - 1;
-      for (let i = startNum; i <= endNum; i += 2) {
-        pairs.push([i, (i + 1 <= endNum) ? i + 1 : null]);
-      }
+    const endNum = startNum + quantity - 1;
+    for (let i = startNum; i <= endNum; i += 2) {
+      pairs.push([i, (i + 1 <= endNum) ? i + 1 : null]);
     }
     return pairs;
-  }, [useBackendData, backendCards, startNum, quantity]);
+  }, [startNum, quantity]);
 
   // ── Print Flow ──
   const handlePrintRequest = useCallback(() => {
@@ -122,7 +109,6 @@ function App() {
         setShowValidation={setShowValidation}
         setShowDrawMode={setShowDrawMode}
         setShowPrintModal={setShowPrintModal}
-        backendOnline={backendOnline}
       />
 
       {/* Main Content */}
@@ -154,8 +140,7 @@ function App() {
           addPrize={addPrize}
           removePrize={removePrize}
           updatePrize={updatePrize}
-          resetAll={resetAll}
-          refreshCards={refreshBackendCards}
+          resetAll={handleResetAll}
         />
 
         {/* Right Preview Area */}
@@ -171,9 +156,9 @@ function App() {
           realizadoPorLogo={realizadoPorLogo}
           qrCodeLogo={qrCodeLogo}
           showThumbnails={showThumbnails}
-          backendCards={useBackendData ? backendCards : null}
-          backendOnline={backendOnline}
-          loadingCards={loadingCards}
+          backendCards={null}
+          backendOnline={false}
+          loadingCards={false}
           zoom={zoom}
           setZoom={setZoom}
         />

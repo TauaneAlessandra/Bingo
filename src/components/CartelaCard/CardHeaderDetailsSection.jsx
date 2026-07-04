@@ -1,5 +1,5 @@
 import React from 'react';
-import DefaultToucanLogo from '../DefaultToucanLogo';
+import { DefaultToucanLogo } from '..';
 
 const CardHeaderDetailsSection = ({ config, logoData, isWhiteAccent, accentColor }) => {
   return (

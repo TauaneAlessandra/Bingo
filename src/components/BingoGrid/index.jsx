@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import PropTypes from 'prop-types';
 import { getBingoColors } from '../../utils/colorUtils';
 import BingoHeader from './BingoHeader';
 import BingoRow from './BingoRow';
@@ -42,5 +43,15 @@ const BingoGrid = memo(({
 });
 
 BingoGrid.displayName = 'BingoGrid';
+
+BingoGrid.propTypes = {
+  numbers: PropTypes.object.isRequired,
+  accentColor: PropTypes.string,
+  centerSpaceType: PropTypes.string,
+  logoData: PropTypes.string,
+  centerLogoData: PropTypes.string,
+  gridNumberSize: PropTypes.string,
+  gridLabelSize: PropTypes.string,
+};
 
 export default BingoGrid;

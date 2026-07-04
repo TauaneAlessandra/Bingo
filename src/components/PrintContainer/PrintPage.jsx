@@ -1,5 +1,5 @@
 import React from 'react';
-import CartelaCard from '../CartelaCard';
+import { CartelaCard } from '..';
 
 function PrintPage({
   card1,
